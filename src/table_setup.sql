@@ -142,6 +142,11 @@ CREATE TABLE IF NOT EXISTS school.instrument_rental (
  instrument_cost DOUBLE PRECISION(6,2)
 );
 
+CREATE TABLE IF NOT EXISTS school.price (
+    type_id VARCHAR(255) NOT NULL PRIMARY,
+    price DOUBLE PRECISION(6.2)
+);
+
 
 ALTER TABLE school.instructor_payment ADD CONSTRAINT FK_instructor_payment_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
 
