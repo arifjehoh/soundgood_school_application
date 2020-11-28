@@ -24,13 +24,18 @@ CREATE TABLE IF NOT EXISTS school.instructor_payment (
  created_at TIMESTAMP(6) NOT NULL
 );
 
+-- type_cost, day_cost, level_cost is a FK to price entity.
+-- Instead of writing a price you write the type of class that will be used as ID.
+-- Price Entity have a ID and Price attribute which will tell how much it is.
 CREATE TABLE IF NOT EXISTS school.lesson (
  lesson_id INT AUTO_INCREMENT PRIMARY KEY,
- schedule_time TIMESTAMP(6) NOT NULL,
+ start_time TIMESTAMP(6) NOT NULL,
+ end_time TIMESTAMP(6) NOT NULL,
+ instrument VARCHAR(255) NOT NULL,
  lesson_type NUMERIC(3) NOT NULL,
- type_cost DOUBLE PRECISION(6,2),
- day_cost DOUBLE PRECISION(6,2),
- level_cost DOUBLE PRECISION(6,2),
+ type_cost VARCHAR(255),
+ day_cost VARCHAR(255),
+ level_cost VARCHAR(255),
  total_cost DOUBLE PRECISION(6,2),
  minimum_enrollment INT NOT NULL,
  maximum_enrollment INT,
@@ -53,7 +58,7 @@ CREATE TABLE IF NOT EXISTS school.student (
 
 
 CREATE TABLE IF NOT EXISTS school.tutor_skill (
- instructor_id INT PRIMARY KEY,
+ instructor_id INT,
  instrument VARCHAR(255) NOT NULL,
  instrument_level NUMERIC(3)
 );
@@ -143,8 +148,8 @@ CREATE TABLE IF NOT EXISTS school.instrument_rental (
 );
 
 CREATE TABLE IF NOT EXISTS school.price (
-    type_id VARCHAR(255) NOT NULL PRIMARY,
-    price DOUBLE PRECISION(6.2)
+    price_name VARCHAR(255) NOT NULL PRIMARY KEY,
+    price DOUBLE PRECISION(6,2)
 );
 
 
@@ -152,8 +157,9 @@ ALTER TABLE school.instructor_payment ADD CONSTRAINT FK_instructor_payment_0 FOR
 
 
 ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
-ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_1 FOREIGN KEY (instructor_id) REFERENCES instructor_payment (instructor_id);
-
+ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_2 FOREIGN KEY (type_cost) REFERENCES price (price_name);
+ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_3 FOREIGN KEY (day_cost) REFERENCES price (price_name);
+ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_4 FOREIGN KEY (level_cost) REFERENCES price (price_name);
 
 ALTER TABLE school.tutor_skill ADD CONSTRAINT FK_tutor_skill_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
 
