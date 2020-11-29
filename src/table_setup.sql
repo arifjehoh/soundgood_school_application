@@ -29,18 +29,17 @@ CREATE TABLE IF NOT EXISTS school.instructor_payment (
 -- Price Entity have a ID and Price attribute which will tell how much it is.
 CREATE TABLE IF NOT EXISTS school.lesson (
  lesson_id INT AUTO_INCREMENT PRIMARY KEY,
- start_time TIMESTAMP(6) NOT NULL,
- end_time TIMESTAMP(6) NOT NULL,
+ start_time TIMESTAMP(0) NOT NULL,
+ end_time TIMESTAMP(0) NOT NULL,
  instrument VARCHAR(255) NOT NULL,
  lesson_type NUMERIC(3) NOT NULL,
  type_cost VARCHAR(255),
  day_cost VARCHAR(255),
  level_cost VARCHAR(255),
  total_cost DOUBLE PRECISION(6,2),
- minimum_enrollment INT NOT NULL,
- maximum_enrollment INT,
  genre VARCHAR(255),
- instructor_id INT
+ instructor_id INT,
+ status INT
 );
 
 
