@@ -139,6 +139,7 @@ CREATE TABLE IF NOT EXISTS school.application (
 
 
 CREATE TABLE IF NOT EXISTS school.instrument_rental (
+ instrument_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
  rental_id INT,
  student_id INT,
  instrument VARCHAR(255),
