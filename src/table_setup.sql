@@ -144,7 +144,8 @@ CREATE TABLE IF NOT EXISTS school.instrument_rental (
  student_id INT,
  instrument VARCHAR(255),
  instrument_type VARCHAR(255),
- instrument_cost DOUBLE PRECISION(6,2)
+ instrument_cost DOUBLE PRECISION(6,2),
+ rental_due_date TIMESTAMP(0)
 );
 
 CREATE TABLE IF NOT EXISTS school.price (
