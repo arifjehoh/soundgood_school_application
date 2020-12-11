@@ -9,6 +9,7 @@ public class App {
         new App().accessDB();
     }
 
+    // SAMPLE OF ACCESS DATABASE
     private void accessDB() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -20,3 +21,6 @@ public class App {
     }
 }
 
+// Completed List instruments that are available to rent. price, kind of instrument shall be shown. (Rented instrument shall not be shown)
+// TODO Rent instrument, A student can rent a instrument but only 2 instrument.
+// TODO Terminate rental, A Student can stop a ongoing rental.
