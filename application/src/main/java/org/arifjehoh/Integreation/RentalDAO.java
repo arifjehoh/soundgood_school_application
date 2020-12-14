@@ -86,6 +86,7 @@ public class RentalDAO {
                 .toLocalDate(), LocalTime.MIDNIGHT.minusSeconds(1)));
         int updatedRows;
         try {
+            createInvoiceStmt.execute("SET FOREIGN_KEY_CHECKS=0");
             updatedRows = executeCreateInvoice(student, dueDate);
             if (updatedRows != 1) {
                 new DBException().handle(connection, message, null);
@@ -98,7 +99,6 @@ public class RentalDAO {
     }
 
     private int executeCreateInvoice(StudentDTO student, String dueDate) throws SQLException {
-        createInvoiceStmt.execute("SET FOREIGN_KEY_CHECKS=0");
         createInvoiceStmt.setInt(1, student.getId());
         createInvoiceStmt.setString(2, student.getCity());
         createInvoiceStmt.setString(3, student.getZipCode());
