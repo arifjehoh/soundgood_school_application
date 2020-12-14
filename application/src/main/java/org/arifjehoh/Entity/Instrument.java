@@ -1,5 +1,7 @@
 package org.arifjehoh.Entity;
 
+import org.arifjehoh.Model.InstrumentDTO;
+
 public class Instrument implements InstrumentDTO {
     private final int id;
     private final String type;
@@ -87,7 +89,7 @@ public class Instrument implements InstrumentDTO {
             return this;
         }
 
-        public Instrument build() throws DBException {
+        public Instrument build() {
             return new Instrument(this);
         }
     }
