@@ -108,11 +108,11 @@ public class RentalDAO {
         return createInvoiceStmt.executeUpdate();
     }
 
-    public void updateInvoice(RentalDTO rental) throws DBException {
+    public void updateInvoice(int rentalId) throws DBException {
         String message = "Could not find invoice.";
         int updatedRows;
         try {
-            updatedRows = executeUpdate(rental);
+            updatedRows = executeUpdate(rentalId);
             if (updatedRows != 1) {
                 new DBException().handle(connection, message, null);
             }
@@ -122,9 +122,9 @@ public class RentalDAO {
         }
     }
 
-    private int executeUpdate(RentalDTO rental) throws SQLException {
-        updateInvoiceStmt.setInt(1, rental.getId());
-        updateInvoiceStmt.setInt(2, rental.getId());
+    private int executeUpdate(int rentalId) throws SQLException {
+        updateInvoiceStmt.setInt(1, rentalId);
+        updateInvoiceStmt.setInt(2, rentalId);
         return updateInvoiceStmt.executeUpdate();
     }
 }
