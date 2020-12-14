@@ -21,6 +21,7 @@ public class InstrumentDAO {
     private PreparedStatement updateInstrumentStmt;
     private PreparedStatement findFirstAvailableInstrumentStmt;
     private PreparedStatement findInstrumentByRentalIdStmt;
+    private PreparedStatement removeInstrumentRent;
 
     public InstrumentDAO() throws DBException {
         try {
@@ -38,9 +39,11 @@ public class InstrumentDAO {
                 "instrument = ? AND rental_id IS NULL LIMIT 1");
         updateInstrumentStmt = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET rental_id = ?, student_id = " +
                 "?, rental_due_date = ? " + "WHERE instrument_id = ?");
-        findInstrumentByRentalIdStmt = connection.prepareStatement("SELECT COUNT(*) AS total FROM instrument_rental " +
-                "WHERE " +
+        findInstrumentByRentalIdStmt = connection.prepareStatement("SELECT COUNT(*) AS total FROM " + TABLE_NAME +
+                " WHERE " +
                 "rental_id = ? AND rental_due_date BETWEEN ? AND ?");
+        removeInstrumentRent = connection.prepareStatement("UPDATE " + TABLE_NAME + " SET rental_id = NULL, student_id " +
+                "= NULL, rental_due_date = NULL WHERE rental_id = ? AND instrument_id = ?");
     }
 
     private void createConnection() throws ClassNotFoundException, SQLException {
@@ -121,5 +124,22 @@ public class InstrumentDAO {
             new DBException().handle(connection, message, cause);
         }
         return canRent;
+    }
+
+    public void terminateRental(int rentalId, int instrumentId) throws DBException {
+        String message = "Could not find instrument.";
+        int updatedRows = 0;
+        try {
+            removeInstrumentRent.setInt(1, rentalId);
+            removeInstrumentRent.setInt(2, instrumentId);
+            updatedRows = removeInstrumentRent.executeUpdate();
+            if (updatedRows != 1) {
+                new DBException().handle(connection, message, null);
+            }
+            connection.commit();
+        } catch (SQLException cause) {
+            new DBException().handle(connection, message, cause);
+        }
+
     }
 }

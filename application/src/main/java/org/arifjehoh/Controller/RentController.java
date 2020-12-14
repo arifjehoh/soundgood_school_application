@@ -1,11 +1,10 @@
 package org.arifjehoh.Controller;
 
 import org.arifjehoh.Entity.DBException;
-import org.arifjehoh.Entity.Rental;
 import org.arifjehoh.Integreation.InstrumentDAO;
+import org.arifjehoh.Integreation.RentalDAO;
 import org.arifjehoh.Integreation.StudentDTO;
 import org.arifjehoh.Model.InstrumentDTO;
-import org.arifjehoh.Integreation.RentalDAO;
 import org.arifjehoh.Model.RentalDTO;
 
 import java.util.List;
@@ -45,6 +44,7 @@ public class RentController {
         return rental;
     }
 
-    public void terminateRental() {
+    public void terminateRental(int rentalId, int instrumentId) throws DBException {
+        instrumentDB.terminateRental(rentalId,instrumentId);
     }
 }

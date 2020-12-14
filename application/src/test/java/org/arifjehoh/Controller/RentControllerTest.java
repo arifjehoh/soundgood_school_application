@@ -38,4 +38,10 @@ public class RentControllerTest extends TestCase {
         controller.rentInstrument(student, timePeriod, "guitar");
     }
 
+    public void testTerminateRental() throws  DBException {
+        int rentalId = 1;
+        int instrumentId = 100;
+        controller.terminateRental(rentalId, instrumentId);
+    }
+
 }
