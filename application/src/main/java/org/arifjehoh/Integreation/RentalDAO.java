@@ -3,6 +3,7 @@ package org.arifjehoh.Integreation;
 import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Rental;
 import org.arifjehoh.Model.RentalDTO;
+import org.arifjehoh.Model.StudentDTO;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -11,7 +12,18 @@ import java.time.temporal.TemporalAdjusters;
 
 public class RentalDAO {
 
-    private static final String TABLE_NAME = "rental";
+    private static final String TABLE_RENTAL = "rental";
+    private static final String TABLE_INSTRUMENT = "instrument_rental";
+    private static final String ATTR_STUDENT_ID = "student_id";
+    private static final String ATTR_CITY = "city";
+    private static final String ATTR_ZIP_CODE = "zip_code";
+    private static final String ATTR_STREET_NAME = "street_name";
+    private static final String ATTR_COUNTRY = "country";
+    private static final String ATTR_RENTAL_DUE_DATE = "rental_due_date";
+    private static final String ATTR_TOTAL_COST = "total_cost";
+    private static final String ATTR_INSTRUMENT_COST = "instrument_cost";
+    private static final String ATTR_RENTAL_ID = "rental_id";
+
     private Connection connection;
     private PreparedStatement findInvoiceStmt;
     private PreparedStatement createInvoiceStmt;
@@ -26,25 +38,29 @@ public class RentalDAO {
         }
     }
 
-    private void prepareStatements() throws SQLException {
-        findInvoiceStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE student_id = ?");
-        createInvoiceStmt = connection.prepareStatement("INSERT INTO " + TABLE_NAME + "(student_id,city," +
-                "zip_code,street_name,country,rental_due_date) VALUES (?,?,?,?,?,?)");
-        updateInvoiceStmt = connection.prepareStatement("UPDATE "+TABLE_NAME+" SET total_cost = (SELECT SUM" +
-                "(instrument_cost) FROM instrument_rental WHERE rental_id = ?) WHERE rental_id = ?");
-    }
-
     private void createConnection() throws ClassNotFoundException, SQLException {
         connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/school", "arif", "1234");
         connection.setAutoCommit(false);
     }
 
-    public Rental findInvoice(int id, String timePeriod) throws DBException {
+    private void prepareStatements() throws SQLException {
+        findInvoiceStmt = connection.prepareStatement("SELECT * FROM " + TABLE_RENTAL +
+                " WHERE " + ATTR_STUDENT_ID + " = ? AND " + ATTR_RENTAL_DUE_DATE + " LIKE ?");
+        createInvoiceStmt = connection.prepareStatement("INSERT INTO " + TABLE_RENTAL + "(" + ATTR_STUDENT_ID + "," + ATTR_CITY +
+                "," + ATTR_ZIP_CODE + "," + ATTR_STREET_NAME + "," + ATTR_COUNTRY + "," + ATTR_RENTAL_DUE_DATE +
+                " VALUES (?,?,?,?,?,?)");
+        updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL + " SET " + ATTR_TOTAL_COST + " = " +
+                "(SELECT SUM(" + ATTR_INSTRUMENT_COST + ") FROM " + TABLE_INSTRUMENT +
+                " WHERE " + ATTR_RENTAL_ID + " = ?) WHERE " + ATTR_RENTAL_ID + "=  ?");
+    }
+
+
+    public Rental findInvoice(int id, String date) throws DBException {
         String failureMsg = "Could not find invoice.";
+        String period = date + "%";
         Rental rental = null;
         try {
-            findInvoiceStmt.setInt(1, id);
-            ResultSet set = findInvoiceStmt.executeQuery();
+            ResultSet set = executeFindInvoice(id, period);
             while (set.next()) {
                 rental = new Rental.Builder(set.getString("rental_id"), set.getString("student_id"),
                         set.getString("city"), set.getString("zip_code"), set.getString("street_name"),
@@ -58,21 +74,19 @@ public class RentalDAO {
         return rental;
     }
 
+    private ResultSet executeFindInvoice(int id, String period) throws SQLException {
+        findInvoiceStmt.setInt(1, id);
+        findInvoiceStmt.setString(2, period);
+        return findInvoiceStmt.executeQuery();
+    }
+
     public void createInvoice(StudentDTO student) throws DBException {
         String message = "Could create a invoice for: " + student;
-        int updatedRows = 0;
+        String dueDate = String.valueOf(LocalDateTime.of(LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth())
+                .toLocalDate(), LocalTime.MIDNIGHT.minusSeconds(1)));
+        int updatedRows;
         try {
-            createInvoiceStmt.execute("SET FOREIGN_KEY_CHECKS=0");
-            createInvoiceStmt.setInt(1, student.getId());
-            createInvoiceStmt.setString(2, student.getCity());
-            createInvoiceStmt.setString(3, student.getZipCode());
-            createInvoiceStmt.setString(4, student.getStreetName());
-            createInvoiceStmt.setString(5, student.getCountry());
-            createInvoiceStmt.setString(6,
-                    String.valueOf(LocalDateTime
-                            .of(LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).toLocalDate(),
-                                    LocalTime.MIDNIGHT.minusSeconds(1))));
-            updatedRows = createInvoiceStmt.executeUpdate();
+            updatedRows = executeCreateInvoice(student, dueDate);
             if (updatedRows != 1) {
                 new DBException().handle(connection, message, null);
             }
@@ -83,19 +97,34 @@ public class RentalDAO {
         }
     }
 
+    private int executeCreateInvoice(StudentDTO student, String dueDate) throws SQLException {
+        createInvoiceStmt.execute("SET FOREIGN_KEY_CHECKS=0");
+        createInvoiceStmt.setInt(1, student.getId());
+        createInvoiceStmt.setString(2, student.getCity());
+        createInvoiceStmt.setString(3, student.getZipCode());
+        createInvoiceStmt.setString(4, student.getStreetName());
+        createInvoiceStmt.setString(5, student.getCountry());
+        createInvoiceStmt.setString(6, dueDate);
+        return createInvoiceStmt.executeUpdate();
+    }
+
     public void updateInvoice(RentalDTO rental) throws DBException {
         String message = "Could not find invoice.";
-        int updatedRows = 0;
+        int updatedRows;
         try {
-            updateInvoiceStmt.setInt(1, rental.getId());
-            updateInvoiceStmt.setInt(2, rental.getId());
-            updatedRows = updateInvoiceStmt.executeUpdate();
+            updatedRows = executeUpdate(rental);
             if (updatedRows != 1) {
-                new DBException().handle(connection,message,null);
+                new DBException().handle(connection, message, null);
             }
             connection.commit();
         } catch (SQLException cause) {
-            new DBException().handle(connection,message,cause);
+            new DBException().handle(connection, message, cause);
         }
+    }
+
+    private int executeUpdate(RentalDTO rental) throws SQLException {
+        updateInvoiceStmt.setInt(1, rental.getId());
+        updateInvoiceStmt.setInt(2, rental.getId());
+        return updateInvoiceStmt.executeUpdate();
     }
 }
