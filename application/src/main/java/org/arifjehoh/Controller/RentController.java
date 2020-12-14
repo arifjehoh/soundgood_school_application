@@ -28,17 +28,21 @@ public class RentController {
     }
 
     public void rentInstrument(StudentDTO student, String timePeriod, String instrument) throws DBException {
-        RentalDTO rental = rentalDB.findInvoice(student.getId(),timePeriod);
-        if (rental == null) {
-            rentalDB.createInvoice(student);
-            rental = rentalDB.findInvoice(student.getId(),timePeriod);
-            System.out.println(rental);
-        }
+        RentalDTO rental = getRental(student, timePeriod);
         boolean canRent = instrumentDB.canRentInstrument(rental.getId(), rental.getDueDate());
         if (canRent) {
             instrumentDB.rentInstrument(rental.getId(), student.getId(), instrument, rental.getDueDate());
             rentalDB.updateInvoice(rental);
         }
+    }
+
+    private RentalDTO getRental(StudentDTO student, String timePeriod) throws DBException {
+        RentalDTO rental = rentalDB.findInvoice(student.getId(), timePeriod);
+        if (rental == null) {
+            rentalDB.createInvoice(student);
+            rental = rentalDB.findInvoice(student.getId(), timePeriod);
+        }
+        return rental;
     }
 
     public void terminateRental() {
