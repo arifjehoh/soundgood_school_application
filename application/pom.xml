@@ -54,7 +54,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>org.arifjehoh.App</mainClass>
+                <mainClass>org.arifjehoh.Main</mainClass>
               </manifest>
             </archive>
           </configuration>
