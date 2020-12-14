@@ -135,7 +135,7 @@ public class InstrumentDAO {
         return findInstrumentByRentalIdStmt.executeQuery();
     }
 
-    public void terminateRental(int rentalId, int instrumentId) throws DBException {
+    public String terminateRental(String rentalId, String instrumentId) throws DBException {
         String message = "Could not find instrument.";
         try {
             int updatedRows = executeRemoveRent(rentalId, instrumentId);
@@ -146,11 +146,12 @@ public class InstrumentDAO {
         } catch (SQLException cause) {
             new DBException().handle(connection, message, cause);
         }
+        return "You have successfully terminate your rental of instrument.";
     }
 
-    private int executeRemoveRent(int rentalId, int instrumentId) throws SQLException {
-        removeInstrumentRent.setInt(1, rentalId);
-        removeInstrumentRent.setInt(2, instrumentId);
+    private int executeRemoveRent(String rentalId, String instrumentId) throws SQLException {
+        removeInstrumentRent.setInt(1, Integer.parseInt(rentalId));
+        removeInstrumentRent.setInt(2, Integer.parseInt(instrumentId));
         return removeInstrumentRent.executeUpdate();
     }
 }

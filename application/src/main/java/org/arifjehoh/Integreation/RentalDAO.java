@@ -52,6 +52,7 @@ public class RentalDAO {
         updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL + " SET " + ATTR_TOTAL_COST + " = " +
                 "(SELECT SUM(" + ATTR_INSTRUMENT_COST + ") FROM " + TABLE_INSTRUMENT +
                 " WHERE " + ATTR_RENTAL_ID + " = ?) WHERE " + ATTR_RENTAL_ID + "=  ?");
+        // TODO TOTAL COST overwrites the previous cost. Need to only add the cost.
     }
 
 
