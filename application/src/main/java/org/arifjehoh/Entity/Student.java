@@ -1,6 +1,6 @@
 package org.arifjehoh.Entity;
 
-import org.arifjehoh.Integreation.StudentDTO;
+import org.arifjehoh.Model.StudentDTO;
 
 public class Student implements StudentDTO {
     private final int studentId;
