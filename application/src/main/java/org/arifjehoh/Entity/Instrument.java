@@ -56,6 +56,16 @@ public class Instrument implements InstrumentDTO {
         return dueDate;
     }
 
+    @Override
+    public String toString() {
+        return "Instrument ID: " + getId() +
+                "\t| Rental Id: " + getRentalId() +
+                "\t| Instrument: " + getType() +
+                "\t\t| Cost: " + getCost() +
+                "\t\t| Due Date: " + getDueDate();
+
+    }
+
     public static class Builder {
         private final int id;
         private final String type;

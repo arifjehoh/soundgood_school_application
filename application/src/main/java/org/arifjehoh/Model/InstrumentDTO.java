@@ -14,4 +14,6 @@ public interface InstrumentDTO {
     double getCost();
 
     String getDueDate();
+
+    String toString();
 }

@@ -66,6 +66,14 @@ public class Rental implements RentalDTO {
         return totalCost;
     }
 
+    @Override
+    public String toString() {
+        return "Rental ID: " + getId() +
+                "\t| Student ID: " + getStudentId() +
+                "\t| Due Date: " + getDueDate() +
+                "\t\t| Total cost: " + getTotalCost();
+    }
+
     public static class Builder {
         private final int studentId;
         private final String city;

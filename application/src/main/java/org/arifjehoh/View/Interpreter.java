@@ -71,26 +71,22 @@ public class Interpreter {
     private void printAbout(CommandLine cmd) throws DBException {
         if (!cmd.getParameter(0).equals("")) {
             int studentId = Integer.parseInt(cmd.getParameter(0));
-
-            List<? extends RentalDTO> rentals = controller.getRentalInvoices(studentId);
-            rentals.stream().map(rental -> "Rental ID: " + rental.getId() +
-                    "\t| Student ID: " + rental.getStudentId() +
-                    "\t| Due Date: " + rental.getDueDate() +
-                    "\t\t| Total cost: " + rental.getTotalCost())
-                    .forEach(System.out::println);
-
+            printRentals(studentId);
             System.out.println("+++++++++++++++++++++++++++++");
-
-            List<? extends InstrumentDTO> instruments = controller.getInstrumentsBy(studentId);
-            instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
-                    "\t| Rental Id: " + instrument.getRentalId() +
-                    "\t| Instrument: " + instrument.getType() +
-                    "\t\t| Cost: " + instrument.getCost() +
-                    "\t\t| Due Date: " + instrument.getDueDate())
-                    .forEach(System.out::println);
+            printInstruments(studentId);
         } else {
             System.out.println("Could not find information from your student id.");
         }
+    }
+
+    private void printInstruments(int studentId) throws DBException {
+        List<? extends InstrumentDTO> instruments = controller.getInstrumentsBy(studentId);
+        instruments.stream().map(InstrumentDTO::toString).forEach(System.out::println);
+    }
+
+    private void printRentals(int studentId) throws DBException {
+        List<? extends RentalDTO> rentals = controller.getRentalInvoices(studentId);
+        rentals.stream().map(RentalDTO::toString).forEach(System.out::println);
     }
 
     private void printAvailableInstruments(String cmd) throws DBException {
