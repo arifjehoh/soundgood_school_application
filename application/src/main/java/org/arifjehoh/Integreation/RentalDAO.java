@@ -2,7 +2,7 @@ package org.arifjehoh.Integreation;
 
 import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Rental;
-import org.arifjehoh.Model.RentalDTO;
+import org.arifjehoh.Model.InstrumentDTO;
 import org.arifjehoh.Model.StudentDTO;
 
 import java.sql.*;
@@ -49,10 +49,14 @@ public class RentalDAO {
         createInvoiceStmt = connection.prepareStatement("INSERT INTO " + TABLE_RENTAL + "(" + ATTR_STUDENT_ID + "," + ATTR_CITY +
                 "," + ATTR_ZIP_CODE + "," + ATTR_STREET_NAME + "," + ATTR_COUNTRY + "," + ATTR_RENTAL_DUE_DATE +
                 " VALUES (?,?,?,?,?,?)");
-        updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL + " SET " + ATTR_TOTAL_COST + " = " +
+       /* updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL + " SET " + ATTR_TOTAL_COST + " = " +
                 "(SELECT SUM(" + ATTR_INSTRUMENT_COST + ") FROM " + TABLE_INSTRUMENT +
                 " WHERE " + ATTR_RENTAL_ID + " = ?) WHERE " + ATTR_RENTAL_ID + "=  ?");
-        // TODO TOTAL COST overwrites the previous cost. Need to only add the cost.
+
+        */
+        updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL +
+                " SET " + ATTR_TOTAL_COST + " = ? + " + ATTR_TOTAL_COST +
+                " WHERE " + ATTR_RENTAL_ID + " = ?");
     }
 
 
@@ -109,11 +113,11 @@ public class RentalDAO {
         return createInvoiceStmt.executeUpdate();
     }
 
-    public void updateInvoice(int rentalId) throws DBException {
+    public void updateInvoice(int rentalId, double cost) throws DBException {
         String message = "Could not find invoice.";
         int updatedRows;
         try {
-            updatedRows = executeUpdate(rentalId);
+            updatedRows = executeUpdate(cost, rentalId);
             if (updatedRows != 1) {
                 new DBException().handle(connection, message, null);
             }
@@ -123,8 +127,8 @@ public class RentalDAO {
         }
     }
 
-    private int executeUpdate(int rentalId) throws SQLException {
-        updateInvoiceStmt.setInt(1, rentalId);
+    private int executeUpdate(double cost, int rentalId) throws SQLException {
+        updateInvoiceStmt.setDouble(1, cost);
         updateInvoiceStmt.setInt(2, rentalId);
         return updateInvoiceStmt.executeUpdate();
     }

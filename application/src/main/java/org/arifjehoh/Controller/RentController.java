@@ -1,6 +1,7 @@
 package org.arifjehoh.Controller;
 
 import org.arifjehoh.Entity.DBException;
+import org.arifjehoh.Entity.Instrument;
 import org.arifjehoh.Integreation.InstrumentDAO;
 import org.arifjehoh.Integreation.RentalDAO;
 import org.arifjehoh.Model.InstrumentDTO;
@@ -28,13 +29,14 @@ public class RentController {
         }
     }
 
-    public String rentInstrument(StudentDTO student, String instrument) throws DBException {
+    public String rentInstrument(StudentDTO student, String type) throws DBException {
         String timePeriod = LocalDate.now().format(DateTimeFormatter.ofPattern("YYYY-MM"));
         RentalDTO rental = getRental(student, timePeriod);
         boolean canRent = instrumentDB.canRentInstrument(rental.getId(), rental.getDueDate());
         if (canRent) {
-            instrumentDB.rentInstrument(rental.getId(), student.getId(), instrument, rental.getDueDate());
-            rentalDB.updateInvoice(rental.getId());
+            InstrumentDTO instrument = instrumentDB.rentInstrument(rental.getId(), student.getId(), type,
+                    rental.getDueDate());
+            rentalDB.updateInvoice(rental.getId(), instrument.getCost());
             return "You have successfully rented your instrument.";
         }
         return "You have failed to rent your instrument, due to multiple rented instrument or instrument not found.";

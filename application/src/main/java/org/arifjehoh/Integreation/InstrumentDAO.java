@@ -2,6 +2,7 @@ package org.arifjehoh.Integreation;
 
 import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Instrument;
+import org.arifjehoh.Model.InstrumentDTO;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -76,11 +77,12 @@ public class InstrumentDAO {
         return instruments;
     }
 
-    public void rentInstrument(int rentalId, int studentId, String instrument, String dueDate) throws DBException {
-        String message = "Could not find available instrument of : " + instrument;
+    public InstrumentDTO rentInstrument(int rentalId, int studentId, String type, String dueDate) throws DBException {
+        String message = "Could not find available instrument of : " + type;
+        InstrumentDTO instrument = null;
         try {
-            int instrumentId = findInstrumentId(instrument);
-            int updatedRows = executeUpdateInstrument(rentalId, studentId, dueDate, instrumentId);
+            instrument = findInstrumentId(type);
+            int updatedRows = executeUpdateInstrument(rentalId, studentId, dueDate, instrument.getId());
             if (updatedRows != 1) {
                 new DBException().handle(connection, message, null);
             }
@@ -88,6 +90,7 @@ public class InstrumentDAO {
         } catch (SQLException cause) {
             new DBException().handle(connection, message, cause);
         }
+        return instrument;
     }
 
     private int executeUpdateInstrument(int rentalId, int studentId, String dueDate, int instrumentId) throws SQLException {
@@ -98,16 +101,19 @@ public class InstrumentDAO {
         return updateInstrumentStmt.executeUpdate();
     }
 
-    private int findInstrumentId(String instrument) throws SQLException {
-        findFirstAvailableInstrumentStmt.setString(1, instrument);
-        int id = 0;
+    private InstrumentDTO findInstrumentId(String type) throws SQLException {
+        findFirstAvailableInstrumentStmt.setString(1, type);
+        Instrument instrument = null;
         try (ResultSet set = findFirstAvailableInstrumentStmt.executeQuery()) {
             while (set.next()) {
-                id = set.getInt("instrument_id");
+                instrument = new Instrument
+                        .Builder(set.getString(ATTR_INSTRUMENT_ID), set.getString(ATTR_INSTRUMENT)
+                        , set.getString(ATTR_TYPE), set.getString(ATTR_COST))
+                        .build();
             }
             connection.commit();
         }
-        return id;
+        return instrument;
     }
 
     public boolean canRentInstrument(int id, String dueDate) throws DBException {
