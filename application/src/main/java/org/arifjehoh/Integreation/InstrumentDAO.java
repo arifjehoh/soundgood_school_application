@@ -127,7 +127,7 @@ public class InstrumentDAO {
         try {
             try (ResultSet result = executeFindInstrumentBy(id, dueDate, firstDayOfMonth)) {
                 while (result.next()) {
-                    canRent = result.getInt("total") <= 2;
+                    canRent = result.getInt("total") < 2;
                 }
                 connection.commit();
             }
