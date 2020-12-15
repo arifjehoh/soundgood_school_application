@@ -2,13 +2,15 @@ package org.arifjehoh.Integreation;
 
 import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Rental;
-import org.arifjehoh.Model.InstrumentDTO;
+import org.arifjehoh.Model.RentalDTO;
 import org.arifjehoh.Model.StudentDTO;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RentalDAO {
 
@@ -28,6 +30,7 @@ public class RentalDAO {
     private PreparedStatement findInvoiceStmt;
     private PreparedStatement createInvoiceStmt;
     private PreparedStatement updateInvoiceStmt;
+    private PreparedStatement findInvoicesStmt;
 
     public RentalDAO() throws DBException {
         try {
@@ -46,14 +49,11 @@ public class RentalDAO {
     private void prepareStatements() throws SQLException {
         findInvoiceStmt = connection.prepareStatement("SELECT * FROM " + TABLE_RENTAL +
                 " WHERE " + ATTR_STUDENT_ID + " = ? AND " + ATTR_RENTAL_DUE_DATE + " LIKE ?");
+        findInvoicesStmt = connection.prepareStatement("SELECT * FROM " + TABLE_RENTAL +
+                " WHERE " + ATTR_STUDENT_ID + " = ?");
         createInvoiceStmt = connection.prepareStatement("INSERT INTO " + TABLE_RENTAL + "(" + ATTR_STUDENT_ID + "," + ATTR_CITY +
                 "," + ATTR_ZIP_CODE + "," + ATTR_STREET_NAME + "," + ATTR_COUNTRY + "," + ATTR_RENTAL_DUE_DATE +
                 " VALUES (?,?,?,?,?,?)");
-       /* updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL + " SET " + ATTR_TOTAL_COST + " = " +
-                "(SELECT SUM(" + ATTR_INSTRUMENT_COST + ") FROM " + TABLE_INSTRUMENT +
-                " WHERE " + ATTR_RENTAL_ID + " = ?) WHERE " + ATTR_RENTAL_ID + "=  ?");
-
-        */
         updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL +
                 " SET " + ATTR_TOTAL_COST + " = ? + " + ATTR_TOTAL_COST +
                 " WHERE " + ATTR_RENTAL_ID + " = ?");
@@ -131,5 +131,33 @@ public class RentalDAO {
         updateInvoiceStmt.setDouble(1, cost);
         updateInvoiceStmt.setInt(2, rentalId);
         return updateInvoiceStmt.executeUpdate();
+    }
+
+    public List<? extends RentalDTO> findInvoices(int studentId) throws DBException {
+        String failureMsg = "Could not find invoice.";
+        List<Rental> rentals = new ArrayList<>();
+        try {
+            ResultSet set = executeFindInvoices(studentId);
+            while (set.next()) {
+                if (set != null) {
+                    Rental rental = new Rental.Builder(set.getString(ATTR_RENTAL_ID), set.getString(ATTR_STUDENT_ID),
+                            set.getString(ATTR_CITY), set.getString(ATTR_ZIP_CODE), set.getString(ATTR_STREET_NAME),
+                            set.getString(ATTR_COUNTRY), set.getString(ATTR_RENTAL_DUE_DATE),
+                            set.getString(ATTR_TOTAL_COST))
+                            .build();
+                    rentals.add(rental);
+                }
+
+            }
+            connection.commit();
+        } catch (SQLException cause) {
+            new DBException().handle(connection, failureMsg, cause);
+        }
+        return rentals;
+    }
+
+    private ResultSet executeFindInvoices(int studentId) throws SQLException {
+        findInvoicesStmt.setInt(1, studentId);
+        return findInvoicesStmt.executeQuery();
     }
 }

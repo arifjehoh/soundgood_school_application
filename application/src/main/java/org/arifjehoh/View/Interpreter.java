@@ -4,6 +4,7 @@ import org.arifjehoh.Controller.Controller;
 import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Student;
 import org.arifjehoh.Model.InstrumentDTO;
+import org.arifjehoh.Model.RentalDTO;
 import org.arifjehoh.Model.StudentDTO;
 
 import java.util.Arrays;
@@ -43,6 +44,9 @@ public class Interpreter {
                         status = controller.terminateRental(cmd.getParameter(0), cmd.getParameter(1));
                         System.out.println(status);
                         break;
+                    case ABOUT_ME:
+                        printAbout(cmd);
+                        break;
                     default:
                         System.out.println("illegal command.");
                 }
@@ -54,6 +58,31 @@ public class Interpreter {
             }
         }
 
+    }
+
+    private void printAbout(CommandLine cmd) throws DBException {
+        if (!cmd.getParameter(0).equals("")) {
+            int studentId = Integer.parseInt(cmd.getParameter(0));
+
+            List<? extends RentalDTO> rentals = controller.getRentalInvoices(studentId);
+            rentals.stream().map(rental -> "Rental ID: " + rental.getId() +
+                    "\t| Student ID: " + rental.getStudentId() +
+                    "\t| Due Date: " + rental.getDueDate() +
+                    "\t\t| Total cost: " + rental.getTotalCost())
+                    .forEach(System.out::println);
+
+            System.out.println("+++++++++++++++++++++++++++++");
+
+            List<? extends InstrumentDTO> instruments = controller.getInstrumentsBy(studentId);
+            instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
+                    "\t| Rental Id: " + instrument.getRentalId() +
+                    "\t| Instrument: " + instrument.getType() +
+                    "\t\t| Cost: " + instrument.getCost() +
+                    "\t\t| Due Date: " + instrument.getDueDate())
+                    .forEach(System.out::println);
+        } else {
+            System.out.println("Could not find information from your student id.");
+        }
     }
 
     private void printAvailableInstruments(String cmd) throws DBException {
@@ -78,6 +107,9 @@ public class Interpreter {
                 }
                 if (command == Command.TERMINATE) {
                     text.append(" [RENTAL_ID] [INSTRUMENT_ID]");
+                }
+                if (command == Command.ABOUT_ME) {
+                    text.append(" [STUDENT_ID]");
                 }
                 System.out.println(text);
             }

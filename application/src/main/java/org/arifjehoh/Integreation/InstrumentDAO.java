@@ -28,6 +28,7 @@ public class InstrumentDAO {
     private PreparedStatement findFirstAvailableInstrumentStmt;
     private PreparedStatement findInstrumentByRentalIdStmt;
     private PreparedStatement removeInstrumentRent;
+    private PreparedStatement findInstrumentsStmt;
 
     public InstrumentDAO() throws DBException {
         try {
@@ -48,6 +49,8 @@ public class InstrumentDAO {
                 " WHERE " + ATTR_RENTAL_ID + " IS NULL");
         findFirstAvailableInstrumentStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
                 " WHERE " + ATTR_INSTRUMENT + " = ? AND " + ATTR_RENTAL_ID + " IS NULL LIMIT 1");
+        findInstrumentsStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
+                " WHERE " + ATTR_STUDENT_ID + " = ?");
         updateInstrumentStmt = connection.prepareStatement("UPDATE " + TABLE_NAME +
                 " SET " + ATTR_RENTAL_ID + " = ?, " + ATTR_STUDENT_ID + " = ?, " + ATTR_RENTAL_DUE_DATE + " = ? " +
                 "WHERE " + ATTR_INSTRUMENT_ID + " = ?");
@@ -159,5 +162,28 @@ public class InstrumentDAO {
         removeInstrumentRent.setInt(1, Integer.parseInt(rentalId));
         removeInstrumentRent.setInt(2, Integer.parseInt(instrumentId));
         return removeInstrumentRent.executeUpdate();
+    }
+
+    public List<? extends InstrumentDTO> findInstrumentsBy(int studentId) throws DBException {
+        List<Instrument> instruments = new ArrayList<>();
+        try {
+            findInstrumentsStmt.setInt(1, studentId);
+            ResultSet result = findInstrumentsStmt.executeQuery();
+            while (result.next()) {
+                Instrument instrument = new Instrument
+                        .Builder(result.getString(ATTR_INSTRUMENT_ID), result.getString(ATTR_INSTRUMENT)
+                        , result.getString(ATTR_TYPE), result.getString(ATTR_COST))
+                        .rentalId(result.getString(ATTR_RENTAL_ID))
+                        .due(result.getString(ATTR_RENTAL_DUE_DATE))
+                        .build();
+                instruments.add(instrument);
+            }
+            connection.commit();
+
+        } catch (SQLException exception) {
+            new DBException().handle(connection, "Could not list available instruments.", exception);
+        }
+
+        return instruments;
     }
 }

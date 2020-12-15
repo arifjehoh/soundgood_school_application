@@ -54,4 +54,12 @@ public class Controller {
         String status = instrumentDB.terminateRental(rentalId, instrumentId);
         return status;
     }
+
+    public List<? extends RentalDTO> getRentalInvoices(int studentId) throws DBException {
+        return rentalDB.findInvoices(studentId);
+    }
+
+    public List<? extends InstrumentDTO> getInstrumentsBy(int studentId) throws DBException {
+        return instrumentDB.findInstrumentsBy(studentId);
+    }
 }
