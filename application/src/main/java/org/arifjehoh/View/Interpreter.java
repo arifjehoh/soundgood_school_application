@@ -20,8 +20,9 @@ public class Interpreter {
         this.controller = controller;
     }
 
-    public void handleCommands() {
+    public void handleCommands() throws DBException {
         boolean keepReceivingCommands = true;
+        printStudentList();
         while (keepReceivingCommands) {
             try {
                 CommandLine cmd = new CommandLine(readNextLine());
@@ -58,6 +59,13 @@ public class Interpreter {
             }
         }
 
+    }
+
+    private void printStudentList() throws DBException {
+        List<? extends StudentDTO> students = controller.getStudents();
+        students.stream().map(student -> "Student Id: " + student.getId() +
+                "\t| Full name: " + student.getFullName())
+                .forEach(System.out::println);
     }
 
     private void printAbout(CommandLine cmd) throws DBException {

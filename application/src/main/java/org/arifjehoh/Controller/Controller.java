@@ -5,6 +5,7 @@ import org.arifjehoh.Integreation.InstrumentDAO;
 import org.arifjehoh.Integreation.RentalDAO;
 import org.arifjehoh.Model.InstrumentDTO;
 import org.arifjehoh.Model.RentalDTO;
+import org.arifjehoh.Model.StudentDAO;
 import org.arifjehoh.Model.StudentDTO;
 
 import java.time.LocalDate;
@@ -14,10 +15,12 @@ import java.util.List;
 public class Controller {
     private final InstrumentDAO instrumentDB;
     private final RentalDAO rentalDB;
+    private final StudentDAO studentDB;
 
     public Controller() throws DBException {
         instrumentDB = new InstrumentDAO();
         rentalDB = new RentalDAO();
+        studentDB = new StudentDAO();
     }
 
     public List<? extends InstrumentDTO> getAvailableInstruments() throws DBException {
@@ -61,5 +64,9 @@ public class Controller {
 
     public List<? extends InstrumentDTO> getInstrumentsBy(int studentId) throws DBException {
         return instrumentDB.findInstrumentsBy(studentId);
+    }
+
+    public List<? extends StudentDTO> getStudents() throws DBException {
+        return studentDB.getStudents();
     }
 }

@@ -70,6 +70,11 @@ public class Student implements StudentDTO {
         return country;
     }
 
+    @Override
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
+    }
+
     public static class Builder {
         private final String ssn;
         private final String streetName;

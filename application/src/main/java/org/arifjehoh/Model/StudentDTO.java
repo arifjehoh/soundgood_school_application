@@ -18,4 +18,6 @@ public interface StudentDTO {
     String getZipCode();
 
     String getCountry();
+
+    String getFullName();
 }
