@@ -28,18 +28,28 @@ public class ControllerTest extends TestCase {
 
     public void testAvailableInstruments() throws DBException {
         assertNotNull(controller.getAvailableInstruments(""));
-    }
-
-    public void testRentInstrument() throws DBException {
-        StudentDTO student = createStudent();
-        String studentId = String.valueOf(student.getId());
-        controller.rentInstrument(studentId, "guitar");
+        assertNotNull(controller.getAvailableInstruments("guitar"));
+        assertNotNull(controller.getAvailableInstruments("viola"));
+        assertNotNull(controller.getAvailableInstruments("piano"));
+        assertNotNull(controller.getAvailableInstruments("keyboard"));
+        assertEquals(0, controller.getAvailableInstruments("empty").size());
     }
 
     public void testTerminateRental() throws DBException {
-        String rentalId = "1";
-        String instrumentId = "100";
-        controller.terminateRental(rentalId, instrumentId);
+        String actual = controller.terminateRental("27", "10");
+        assertEquals("You have successfully terminate your rental of instrument.", actual);
+        actual = controller.terminateRental("27", "11");
+        assertEquals("You have successfully terminate your rental of instrument.", actual);
+    }
+
+    public void testRentInstrument() throws DBException {
+        String actual = controller.rentInstrument("5", "guitar");
+        assertEquals("You have successfully rented your instrument.", actual);
+        actual = controller.rentInstrument("5", "guitar");
+        assertEquals("You have successfully rented your instrument.", actual);
+        actual = controller.rentInstrument("5", "guitar");
+        assertEquals("You have failed to rent your instrument, due to multiple rented instrument or instrument not " +
+                "found.", actual);
     }
 
 }
