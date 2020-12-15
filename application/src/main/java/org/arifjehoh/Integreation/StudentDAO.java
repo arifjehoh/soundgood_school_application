@@ -34,7 +34,7 @@ public class StudentDAO {
     }
 
     private void createConnection() throws ClassNotFoundException, SQLException {
-        connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/school", "arif", "1234");
+        connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/school", "soundgood", "soundgood");
         connection.setAutoCommit(false);
     }
 
