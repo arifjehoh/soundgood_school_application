@@ -61,6 +61,7 @@ public class Interpreter {
 
     /**
      * Print out all students.
+     *
      * @throws DBException
      */
     private void printStudentList() throws DBException {
@@ -92,6 +93,7 @@ public class Interpreter {
 
     /**
      * Print out all available instruments.
+     *
      * @param param, if empty then then find all available instruments.
      * @throws DBException
      */
@@ -110,6 +112,7 @@ public class Interpreter {
 
     /**
      * Print out rentals and rented instruments of student.
+     *
      * @param id, student id.
      * @throws DBException
      */
@@ -126,6 +129,7 @@ public class Interpreter {
 
     /**
      * Print out rental invoice of student.
+     *
      * @param studentId, Id of student.
      * @throws DBException
      */
@@ -136,6 +140,7 @@ public class Interpreter {
 
     /**
      * Print out rented instruments of student.
+     *
      * @param studentId, Id of student.
      * @throws DBException
      */
@@ -146,6 +151,7 @@ public class Interpreter {
 
     /**
      * Reads user input.
+     *
      * @return user input.
      */
     private String readNextLine() {

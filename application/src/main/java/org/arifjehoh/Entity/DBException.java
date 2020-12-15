@@ -16,6 +16,14 @@ public class DBException extends Exception {
 
     }
 
+    /**
+     * Handling causes from queries.
+     *
+     * @param connection to database.
+     * @param message
+     * @param cause
+     * @throws DBException
+     */
     public void handle(Connection connection, String message, Exception cause) throws DBException {
         StringBuilder completeMessage = new StringBuilder().append(message);
         try {

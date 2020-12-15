@@ -61,6 +61,12 @@ public class InstrumentDAO {
                 "WHERE " + ATTR_RENTAL_ID + "= ? AND " + ATTR_INSTRUMENT_ID + " = ?");
     }
 
+    /**
+     * Find all available instruments.
+     *
+     * @return instruments.
+     * @throws DBException
+     */
     public List<Instrument> findAvailableInstruments() throws DBException {
         List<Instrument> instruments = new ArrayList<>();
         try (ResultSet result = findAvailableInstrumentsStmt.executeQuery()) {
@@ -80,6 +86,16 @@ public class InstrumentDAO {
         return instruments;
     }
 
+    /**
+     * Rent a instrument to the student.
+     *
+     * @param rentalId  to relate the instrument to.
+     * @param studentId to relate the instrument to.
+     * @param type      of instrument.
+     * @param dueDate   to return or renew rent.
+     * @return return instrument data.
+     * @throws DBException
+     */
     public InstrumentDTO rentInstrument(int rentalId, String studentId, String type, String dueDate) throws DBException {
         String message = "Could not find available instrument of : " + type;
         InstrumentDTO instrument = null;
@@ -96,6 +112,16 @@ public class InstrumentDAO {
         return instrument;
     }
 
+    /**
+     * Execute Query for updating values of instrument.
+     *
+     * @param rentalId     to relate the instrument to.
+     * @param studentId    to relate the instrument to.
+     * @param dueDate      to return or renew rent.
+     * @param instrumentId for which instrument to update.
+     * @return return status of updating instrument value.
+     * @throws SQLException
+     */
     private int executeUpdateInstrument(int rentalId, String studentId, String dueDate, int instrumentId) throws SQLException {
         updateInstrumentStmt.setInt(1, rentalId);
         updateInstrumentStmt.setInt(2, Integer.parseInt(studentId));
@@ -104,6 +130,13 @@ public class InstrumentDAO {
         return updateInstrumentStmt.executeUpdate();
     }
 
+    /**
+     * Find instrument id of target type.
+     *
+     * @param type target type.
+     * @return first instrument by type.
+     * @throws SQLException
+     */
     private InstrumentDTO findInstrumentId(String type) throws SQLException {
         findFirstAvailableInstrumentStmt.setString(1, type);
         Instrument instrument = null;
@@ -119,6 +152,14 @@ public class InstrumentDAO {
         return instrument;
     }
 
+    /**
+     * Can student rent more instrument.
+     *
+     * @param id      rental id.
+     * @param dueDate when needed to return.
+     * @return if student can rent more instrument.
+     * @throws DBException
+     */
     public boolean canRentInstrument(int id, String dueDate) throws DBException {
         String message = "Could not find rented instrument.";
         String firstDayOfMonth = LocalDate.parse(dueDate.split(" ")[0])
@@ -137,6 +178,15 @@ public class InstrumentDAO {
         return canRent;
     }
 
+    /**
+     * Execute query for finding instrument by rental id.
+     *
+     * @param id              rental id
+     * @param dueDate
+     * @param firstDayOfMonth
+     * @return query value.
+     * @throws SQLException
+     */
     private ResultSet executeFindInstrumentBy(int id, String dueDate, String firstDayOfMonth) throws SQLException {
         findInstrumentByRentalIdStmt.setInt(1, id);
         findInstrumentByRentalIdStmt.setString(2, firstDayOfMonth);
@@ -144,6 +194,14 @@ public class InstrumentDAO {
         return findInstrumentByRentalIdStmt.executeQuery();
     }
 
+    /**
+     * Terminate rental.
+     *
+     * @param rentalId
+     * @param instrumentId
+     * @return status.
+     * @throws DBException
+     */
     public String terminateRental(String rentalId, String instrumentId) throws DBException {
         String message = "Could not find instrument.";
         try {
@@ -158,12 +216,27 @@ public class InstrumentDAO {
         return "You have successfully terminate your rental of instrument.";
     }
 
+    /**
+     * Execute query for removing rented instrument.
+     *
+     * @param rentalId
+     * @param instrumentId
+     * @return query value.
+     * @throws SQLException
+     */
     private int executeRemoveRent(String rentalId, String instrumentId) throws SQLException {
         removeInstrumentRent.setInt(1, Integer.parseInt(rentalId));
         removeInstrumentRent.setInt(2, Integer.parseInt(instrumentId));
         return removeInstrumentRent.executeUpdate();
     }
 
+    /**
+     * Find instruments by student id.
+     *
+     * @param studentId
+     * @return list of instruments owned by student.
+     * @throws DBException
+     */
     public List<? extends InstrumentDTO> findInstrumentsBy(int studentId) throws DBException {
         List<Instrument> instruments = new ArrayList<>();
         try {

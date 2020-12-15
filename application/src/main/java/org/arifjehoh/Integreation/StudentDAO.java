@@ -1,13 +1,15 @@
-package org.arifjehoh.Model;
+package org.arifjehoh.Integreation;
 
 import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Student;
+import org.arifjehoh.Model.StudentDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentDAO {
+
     private static final String TABLE_NAME = "student";
     private static final String ATTR_STUDENT_ID = "student_id";
     private static final String ATTR_FIRST_NAME = "first_name";
@@ -16,7 +18,9 @@ public class StudentDAO {
     private static final String ATTR_CITY = "city";
     private static final String ATTR_STREET_NAME = "street_name";
     private static final String ATTR_SSN = "social_security_number";
+
     private Connection connection;
+
     private PreparedStatement findStudentsStmt;
     private PreparedStatement findStudentStmt;
 
@@ -40,7 +44,13 @@ public class StudentDAO {
                 " WHERE " + ATTR_STUDENT_ID + " = ?");
     }
 
-    public List<? extends StudentDTO> getStudents() throws DBException {
+    /**
+     * Returns list of students.
+     *
+     * @return list of students attending.
+     * @throws DBException
+     */
+    public List<? extends StudentDTO> findStudents() throws DBException {
         List<Student> students = new ArrayList<>();
         try (ResultSet set = findStudentsStmt.executeQuery()) {
             while (set.next()) {
@@ -55,6 +65,13 @@ public class StudentDAO {
         return students;
     }
 
+    /**
+     * Find student by id.
+     *
+     * @param id, student id
+     * @return student information.
+     * @throws DBException
+     */
     public StudentDTO findStudent(String id) throws DBException {
         Student student = null;
         try {

@@ -61,6 +61,14 @@ public class RentalDAO {
     }
 
 
+    /**
+     * Find invoice of student.
+     *
+     * @param id   student id.
+     * @param date "YYYY-MM"
+     * @return invoice of student by date.
+     * @throws DBException
+     */
     public Rental findInvoice(String id, String date) throws DBException {
         String failureMsg = "Could not find invoice.";
         String period = date + "%";
@@ -80,12 +88,26 @@ public class RentalDAO {
         return rental;
     }
 
+    /**
+     * Execute query for finding invoice.
+     *
+     * @param id     student id
+     * @param period "YYYY-MM%"
+     * @return query values.
+     * @throws SQLException
+     */
     private ResultSet executeFindInvoice(String id, String period) throws SQLException {
         findInvoiceStmt.setInt(1, Integer.parseInt(id));
         findInvoiceStmt.setString(2, period);
         return findInvoiceStmt.executeQuery();
     }
 
+    /**
+     * Create new invoice.
+     *
+     * @param student
+     * @throws DBException
+     */
     public void createInvoice(StudentDTO student) throws DBException {
         String message = "Could create a invoice for: " + student;
         String dueDate = String.valueOf(LocalDateTime.of(LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth())
@@ -105,6 +127,15 @@ public class RentalDAO {
         }
     }
 
+    /**
+     * Execute query for creating new invoice.
+     * Mock data will added for only mandatory requirement.
+     *
+     * @param student
+     * @param dueDate
+     * @return query values.
+     * @throws SQLException
+     */
     private int executeCreateInvoice(StudentDTO student, String dueDate) throws SQLException {
         createInvoiceStmt.setInt(1, student.getId());
         createInvoiceStmt.setString(2, "stockholm"); // CITY
@@ -115,6 +146,13 @@ public class RentalDAO {
         return createInvoiceStmt.executeUpdate();
     }
 
+    /**
+     * Update invoice values.
+     *
+     * @param rentalId
+     * @param cost     of instrument.
+     * @throws DBException
+     */
     public void updateInvoice(int rentalId, double cost) throws DBException {
         String message = "Could not find invoice.";
         int updatedRows;
@@ -129,12 +167,27 @@ public class RentalDAO {
         }
     }
 
+    /**
+     * Execute query for updating invoice.
+     *
+     * @param cost
+     * @param rentalId
+     * @return query status.
+     * @throws SQLException
+     */
     private int executeUpdate(double cost, int rentalId) throws SQLException {
         updateInvoiceStmt.setDouble(1, cost);
         updateInvoiceStmt.setInt(2, rentalId);
         return updateInvoiceStmt.executeUpdate();
     }
 
+    /**
+     * Find invoices of student.
+     *
+     * @param studentId
+     * @return list of invoices by student.
+     * @throws DBException
+     */
     public List<? extends RentalDTO> findInvoices(int studentId) throws DBException {
         String failureMsg = "Could not find invoice.";
         List<Rental> rentals = new ArrayList<>();
@@ -158,6 +211,13 @@ public class RentalDAO {
         return rentals;
     }
 
+    /**
+     * Execute query for finding invoices.
+     *
+     * @param studentId
+     * @return query values.
+     * @throws SQLException
+     */
     private ResultSet executeFindInvoices(int studentId) throws SQLException {
         findInvoicesStmt.setInt(1, studentId);
         return findInvoicesStmt.executeQuery();
