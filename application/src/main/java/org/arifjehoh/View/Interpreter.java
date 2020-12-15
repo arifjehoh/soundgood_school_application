@@ -1,66 +1,46 @@
 package org.arifjehoh.View;
 
-import org.arifjehoh.Controller.RentController;
+import org.arifjehoh.Controller.Controller;
+import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Student;
 import org.arifjehoh.Model.InstrumentDTO;
 import org.arifjehoh.Model.StudentDTO;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Interpreter {
     private static final String PROMPT = "> ";
-    private final RentController rentController;
+    private final Controller controller;
     private final Scanner console = new Scanner(System.in);
-    private boolean keepRecevingCommands = false;
 
-    public Interpreter(RentController rentController) {
-        this.rentController = rentController;
+    public Interpreter(Controller controller) {
+        this.controller = controller;
     }
 
     public void handleCommands() {
-        keepRecevingCommands = true;
-        String status = "";
-        while (keepRecevingCommands) {
+        boolean keepReceivingCommands = true;
+        while (keepReceivingCommands) {
             try {
                 CommandLine cmd = new CommandLine(readNextLine());
+                String status;
                 switch (cmd.getCommand()) {
                     case HELP:
-                        for (Command command : Command.values()) {
-                            StringBuilder text = new StringBuilder().append(command.toString().toLowerCase());
-                            if (command == Command.ILLEGAL_COMMAND) {
-                                continue;
-                            }
-                            if (command == Command.RENT) {
-                                text.append(" [INSTRUMENT_TYPE]");
-                            }
-                            if (command == Command.TERMINATE) {
-                                text.append(" [RENTAL_ID] [INSTRUMENT_ID]");
-                            }
-
-                            System.out.println(text);
-                        }
+                        printCommands();
                         break;
                     case QUIT:
-                        keepRecevingCommands = false;
+                        keepReceivingCommands = false;
                         break;
                     case LIST:
-                        List<? extends InstrumentDTO> instruments = null;
-                        if (cmd.getParameter(0).equals("")) {
-                            instruments = rentController.getAvailableInstruments();
-                        }
-                        for (InstrumentDTO instrument : instruments) {
-                            System.out.println("Instrument ID: " + instrument.getId() +
-                                    "\t| Instrument: " + instrument.getType() +
-                                    "\t\t| Cost: " + instrument.getCost());
-                        }
+                        printAvailableInstruments(cmd.getParameter(0));
                         break;
                     case RENT:
-                        status = rentController.rentInstrument(createStudent(), cmd.getParameter(0));
+                        status = controller.rentInstrument(createStudent(), cmd.getParameter(0));
                         System.out.println(status);
                         break;
                     case TERMINATE:
-                        status = rentController.terminateRental(cmd.getParameter(0), cmd.getParameter(1));
+                        status = controller.terminateRental(cmd.getParameter(0), cmd.getParameter(1));
                         System.out.println(status);
                         break;
                     default:
@@ -76,6 +56,34 @@ public class Interpreter {
 
     }
 
+    private void printAvailableInstruments(String cmd) throws DBException {
+        if (cmd.equals("")) {
+            List<? extends InstrumentDTO> instruments = controller.getAvailableInstruments();
+            if (instruments != null) {
+                instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
+                        "\t| Instrument: " + instrument.getType() +
+                        "\t\t| Cost: " + instrument.getCost()).forEach(System.out::println);
+            }
+        } else {
+            System.out.println("Could not understand the command.");
+        }
+    }
+
+    private void printCommands() {
+        Arrays.stream(Command.values()).forEachOrdered(command -> {
+            StringBuilder text = new StringBuilder().append(command.toString().toLowerCase());
+            if (command != Command.ILLEGAL_COMMAND) {
+                if (command == Command.RENT) {
+                    text.append(" [INSTRUMENT_TYPE]");
+                }
+                if (command == Command.TERMINATE) {
+                    text.append(" [RENTAL_ID] [INSTRUMENT_ID]");
+                }
+                System.out.println(text);
+            }
+        });
+    }
+
     private String readNextLine() {
         System.out.print(PROMPT);
         return console.nextLine();
@@ -88,11 +96,11 @@ public class Interpreter {
      */
     private StudentDTO createStudent() {
         int studentId = 57;
+        int age = 23;
         String city = "stockholm";
         String streetName = "danmarkvagen 33";
         String firstName = "Arif";
         String lastName = "Jehda-Oh";
-        int age = 23;
         String ssn = "199410231234";
         return new Student.Builder(studentId, firstName, lastName, age, city, streetName, ssn).build();
     }
