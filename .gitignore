@@ -1,1 +1,5 @@
 mocked_start_up.sql
+*.class
+docker-compose.yml
+application/Dockerfile
+application/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
