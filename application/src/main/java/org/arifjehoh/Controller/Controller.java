@@ -1,7 +1,6 @@
 package org.arifjehoh.Controller;
 
 import org.arifjehoh.Entity.DBException;
-import org.arifjehoh.Entity.Instrument;
 import org.arifjehoh.Integreation.InstrumentDAO;
 import org.arifjehoh.Integreation.RentalDAO;
 import org.arifjehoh.Model.InstrumentDTO;
@@ -12,11 +11,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class RentController {
+public class Controller {
     private final InstrumentDAO instrumentDB;
     private final RentalDAO rentalDB;
 
-    public RentController() throws DBException {
+    public Controller() throws DBException {
         instrumentDB = new InstrumentDAO();
         rentalDB = new RentalDAO();
     }

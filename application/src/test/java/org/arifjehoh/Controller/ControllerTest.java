@@ -5,15 +5,12 @@ import org.arifjehoh.Entity.DBException;
 import org.arifjehoh.Entity.Student;
 import org.arifjehoh.Model.StudentDTO;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+public class ControllerTest extends TestCase {
 
-public class RentControllerTest extends TestCase {
-
-    private RentController controller;
+    private Controller controller;
     public void setUp() throws Exception {
         super.setUp();
-        controller = new RentController();
+        controller = new Controller();
     }
 
     private StudentDTO createStudent() {
