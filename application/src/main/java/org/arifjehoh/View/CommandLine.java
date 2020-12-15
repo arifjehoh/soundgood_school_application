@@ -12,6 +12,11 @@ public class CommandLine {
         extractParams(input);
     }
 
+    /**
+     * Extracting user input into parameters.
+     *
+     * @param input, user inputs.
+     */
     private void extractParams(String input) {
         if (input == null) {
             params = null;
@@ -25,6 +30,12 @@ public class CommandLine {
         params = paramPartOfCommand.split(PARAM_DELIMITER);
     }
 
+    /**
+     * Removing command from input.
+     *
+     * @param input, user input
+     * @return trimmed user input.
+     */
     private String removeCommand(String input) {
         if (command == Command.ILLEGAL_COMMAND) {
             return input;
@@ -34,6 +45,11 @@ public class CommandLine {
         return withoutCommand.trim();
     }
 
+    /**
+     * Parsing which commands from input.
+     *
+     * @param input
+     */
     private void parseCommand(String input) {
         int commandNameIndex = 0;
         try {
@@ -49,6 +65,12 @@ public class CommandLine {
         }
     }
 
+    /**
+     * Removing extra character from input.
+     *
+     * @param input, user input.
+     * @return, formats the user input.
+     */
     private String removeExtraSpaces(String input) {
         if (input == null) {
             return input;
@@ -57,10 +79,21 @@ public class CommandLine {
         return input.trim().replaceAll(PARAM_DELIMITER + oneOrMoreOccurrences, PARAM_DELIMITER);
     }
 
+    /**
+     * Returns command.
+     *
+     * @return command.
+     */
     public Command getCommand() {
         return command;
     }
 
+    /**
+     * Return user input command parameter.
+     *
+     * @param index
+     * @return parameter value from specified user input.
+     */
     public String getParameter(int index) {
         if (params == null) {
             return null;
@@ -69,9 +102,5 @@ public class CommandLine {
             return null;
         }
         return params[index];
-    }
-
-    public int getParameters() {
-        return params.length;
     }
 }

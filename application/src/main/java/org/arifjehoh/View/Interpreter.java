@@ -59,12 +59,19 @@ public class Interpreter {
         }
     }
 
+    /**
+     * Print out all students.
+     * @throws DBException
+     */
     private void printStudentList() throws DBException {
         List<? extends StudentDTO> students = controller.getStudents();
         students.stream().map(student -> "Student Id: " + student.getId() + "\t| Full name: " + student.getFullName())
                 .forEach(System.out::println);
     }
 
+    /**
+     * Print out all commands.
+     */
     private void printCommands() {
         Arrays.stream(Command.values()).forEachOrdered(command -> {
             StringBuilder text = new StringBuilder().append(command.toString().toLowerCase());
@@ -83,8 +90,13 @@ public class Interpreter {
         });
     }
 
-    private void printAvailableInstruments(String cmd) throws DBException {
-        if (cmd.equals("")) {
+    /**
+     * Print out all available instruments.
+     * @param param, if empty then then find all available instruments.
+     * @throws DBException
+     */
+    private void printAvailableInstruments(String param) throws DBException {
+        if (param.equals("")) {
             List<? extends InstrumentDTO> instruments = controller.getAvailableInstruments();
             if (instruments != null) {
                 instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
@@ -96,6 +108,11 @@ public class Interpreter {
         }
     }
 
+    /**
+     * Print out rentals and rented instruments of student.
+     * @param id, student id.
+     * @throws DBException
+     */
     private void printAbout(String id) throws DBException {
         if (!id.equals("")) {
             int studentId = Integer.parseInt(id);
@@ -107,16 +124,30 @@ public class Interpreter {
         }
     }
 
+    /**
+     * Print out rental invoice of student.
+     * @param studentId, Id of student.
+     * @throws DBException
+     */
     private void printRentals(int studentId) throws DBException {
         List<? extends RentalDTO> rentals = controller.getRentalInvoices(studentId);
         rentals.stream().map(RentalDTO::toString).forEach(System.out::println);
     }
 
+    /**
+     * Print out rented instruments of student.
+     * @param studentId, Id of student.
+     * @throws DBException
+     */
     private void printInstruments(int studentId) throws DBException {
         List<? extends InstrumentDTO> instruments = controller.getInstrumentsBy(studentId);
         instruments.stream().map(InstrumentDTO::toString).forEach(System.out::println);
     }
 
+    /**
+     * Reads user input.
+     * @return user input.
+     */
     private String readNextLine() {
         System.out.print(PROMPT);
         return console.nextLine();
