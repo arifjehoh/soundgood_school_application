@@ -80,7 +80,7 @@ public class InstrumentDAO {
         return instruments;
     }
 
-    public InstrumentDTO rentInstrument(int rentalId, int studentId, String type, String dueDate) throws DBException {
+    public InstrumentDTO rentInstrument(int rentalId, String studentId, String type, String dueDate) throws DBException {
         String message = "Could not find available instrument of : " + type;
         InstrumentDTO instrument = null;
         try {
@@ -96,9 +96,9 @@ public class InstrumentDAO {
         return instrument;
     }
 
-    private int executeUpdateInstrument(int rentalId, int studentId, String dueDate, int instrumentId) throws SQLException {
+    private int executeUpdateInstrument(int rentalId, String studentId, String dueDate, int instrumentId) throws SQLException {
         updateInstrumentStmt.setInt(1, rentalId);
-        updateInstrumentStmt.setInt(2, studentId);
+        updateInstrumentStmt.setInt(2, Integer.parseInt(studentId));
         updateInstrumentStmt.setString(3, dueDate);
         updateInstrumentStmt.setInt(4, instrumentId);
         return updateInstrumentStmt.executeUpdate();

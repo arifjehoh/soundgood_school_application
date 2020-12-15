@@ -8,6 +8,7 @@ import org.arifjehoh.Model.StudentDTO;
 public class ControllerTest extends TestCase {
 
     private Controller controller;
+
     public void setUp() throws Exception {
         super.setUp();
         controller = new Controller();
@@ -31,10 +32,11 @@ public class ControllerTest extends TestCase {
 
     public void testRentInstrument() throws DBException {
         StudentDTO student = createStudent();
-        controller.rentInstrument(student, "guitar");
+        String studentId = String.valueOf(student.getId());
+        controller.rentInstrument(studentId, "guitar");
     }
 
-    public void testTerminateRental() throws  DBException {
+    public void testTerminateRental() throws DBException {
         String rentalId = "1";
         String instrumentId = "100";
         controller.terminateRental(rentalId, instrumentId);

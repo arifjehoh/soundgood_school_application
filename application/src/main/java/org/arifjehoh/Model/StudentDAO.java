@@ -18,6 +18,7 @@ public class StudentDAO {
     private static final String ATTR_SSN = "social_security_number";
     private Connection connection;
     private PreparedStatement findStudentsStmt;
+    private PreparedStatement findStudentStmt;
 
     public StudentDAO() throws DBException {
         try {
@@ -35,14 +36,16 @@ public class StudentDAO {
 
     private void prepareStatements() throws SQLException {
         findStudentsStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME);
+        findStudentStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
+                " WHERE " + ATTR_STUDENT_ID + " = ?");
     }
 
     public List<? extends StudentDTO> getStudents() throws DBException {
         List<Student> students = new ArrayList<>();
         try (ResultSet set = findStudentsStmt.executeQuery()) {
             while (set.next()) {
-                Student student = new Student.Builder(set.getInt(ATTR_STUDENT_ID),set.getString(ATTR_FIRST_NAME),
-                        set.getString(ATTR_LAST_NAME),set.getInt(ATTR_AGE),set.getString(ATTR_CITY),
+                Student student = new Student.Builder(set.getInt(ATTR_STUDENT_ID), set.getString(ATTR_FIRST_NAME),
+                        set.getString(ATTR_LAST_NAME), set.getInt(ATTR_AGE), set.getString(ATTR_CITY),
                         set.getString(ATTR_STREET_NAME), set.getString(ATTR_SSN)).build();
                 students.add(student);
             }
@@ -50,5 +53,21 @@ public class StudentDAO {
             new DBException().handle(connection, "Could not list students.", cause);
         }
         return students;
+    }
+
+    public StudentDTO findStudent(String id) throws DBException {
+        Student student = null;
+        try {
+            findStudentStmt.setInt(1, Integer.parseInt(id));
+            ResultSet set = findStudentStmt.executeQuery();
+            while (set.next()) {
+                student = new Student.Builder(set.getInt(ATTR_STUDENT_ID), set.getString(ATTR_FIRST_NAME),
+                        set.getString(ATTR_LAST_NAME), set.getInt(ATTR_AGE), set.getString(ATTR_CITY),
+                        set.getString(ATTR_STREET_NAME), set.getString(ATTR_SSN)).build();
+            }
+        } catch (SQLException cause) {
+            new DBException().handle(connection, "Could not find student.", cause);
+        }
+        return student;
     }
 }

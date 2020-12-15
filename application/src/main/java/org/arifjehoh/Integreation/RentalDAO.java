@@ -51,16 +51,17 @@ public class RentalDAO {
                 " WHERE " + ATTR_STUDENT_ID + " = ? AND " + ATTR_RENTAL_DUE_DATE + " LIKE ?");
         findInvoicesStmt = connection.prepareStatement("SELECT * FROM " + TABLE_RENTAL +
                 " WHERE " + ATTR_STUDENT_ID + " = ?");
-        createInvoiceStmt = connection.prepareStatement("INSERT INTO " + TABLE_RENTAL + "(" + ATTR_STUDENT_ID + "," + ATTR_CITY +
-                "," + ATTR_ZIP_CODE + "," + ATTR_STREET_NAME + "," + ATTR_COUNTRY + "," + ATTR_RENTAL_DUE_DATE +
-                " VALUES (?,?,?,?,?,?)");
+        createInvoiceStmt = connection.prepareStatement("INSERT INTO " + TABLE_RENTAL + "(" + ATTR_STUDENT_ID +
+                "," + ATTR_CITY + "," + ATTR_ZIP_CODE + "," + ATTR_STREET_NAME + "," + ATTR_COUNTRY +
+                "," + ATTR_RENTAL_DUE_DATE + "," + ATTR_TOTAL_COST + ")" +
+                " VALUES (?,?,?,?,?,?,0)");
         updateInvoiceStmt = connection.prepareStatement("UPDATE " + TABLE_RENTAL +
                 " SET " + ATTR_TOTAL_COST + " = ? + " + ATTR_TOTAL_COST +
                 " WHERE " + ATTR_RENTAL_ID + " = ?");
     }
 
 
-    public Rental findInvoice(int id, String date) throws DBException {
+    public Rental findInvoice(String id, String date) throws DBException {
         String failureMsg = "Could not find invoice.";
         String period = date + "%";
         Rental rental = null;
@@ -79,8 +80,8 @@ public class RentalDAO {
         return rental;
     }
 
-    private ResultSet executeFindInvoice(int id, String period) throws SQLException {
-        findInvoiceStmt.setInt(1, id);
+    private ResultSet executeFindInvoice(String id, String period) throws SQLException {
+        findInvoiceStmt.setInt(1, Integer.parseInt(id));
         findInvoiceStmt.setString(2, period);
         return findInvoiceStmt.executeQuery();
     }
@@ -89,6 +90,7 @@ public class RentalDAO {
         String message = "Could create a invoice for: " + student;
         String dueDate = String.valueOf(LocalDateTime.of(LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth())
                 .toLocalDate(), LocalTime.MIDNIGHT.minusSeconds(1)));
+        dueDate = dueDate.replace("T", " ");
         int updatedRows;
         try {
             createInvoiceStmt.execute("SET FOREIGN_KEY_CHECKS=0");
@@ -105,10 +107,10 @@ public class RentalDAO {
 
     private int executeCreateInvoice(StudentDTO student, String dueDate) throws SQLException {
         createInvoiceStmt.setInt(1, student.getId());
-        createInvoiceStmt.setString(2, student.getCity());
-        createInvoiceStmt.setString(3, student.getZipCode());
-        createInvoiceStmt.setString(4, student.getStreetName());
-        createInvoiceStmt.setString(5, student.getCountry());
+        createInvoiceStmt.setString(2, "stockholm"); // CITY
+        createInvoiceStmt.setString(3, "12345"); // ZIP CODE
+        createInvoiceStmt.setString(4, "streetname"); // STREET NAME
+        createInvoiceStmt.setString(5, "sweden"); // COUNTRY
         createInvoiceStmt.setString(6, dueDate);
         return createInvoiceStmt.executeUpdate();
     }

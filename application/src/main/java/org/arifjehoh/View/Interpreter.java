@@ -38,7 +38,7 @@ public class Interpreter {
                         printAvailableInstruments(cmd.getParameter(0));
                         break;
                     case RENT:
-                        status = controller.rentInstrument(createStudent(), cmd.getParameter(0));
+                        status = controller.rentInstrument(cmd.getParameter(0), cmd.getParameter(1));
                         System.out.println(status);
                         break;
                     case TERMINATE:
@@ -111,7 +111,7 @@ public class Interpreter {
             StringBuilder text = new StringBuilder().append(command.toString().toLowerCase());
             if (command != Command.ILLEGAL_COMMAND) {
                 if (command == Command.RENT) {
-                    text.append(" [INSTRUMENT_TYPE]");
+                    text.append(" [STUDENT_ID] [INSTRUMENT_TYPE]");
                 }
                 if (command == Command.TERMINATE) {
                     text.append(" [RENTAL_ID] [INSTRUMENT_ID]");
