@@ -37,12 +37,20 @@ public class Interpreter {
                         printAvailableInstruments(cmd.getParameter(0));
                         break;
                     case RENT:
-                        status = controller.rentInstrument(cmd.getParameter(0), cmd.getParameter(1));
-                        System.out.println(status);
+                        if (!cmd.getParameter(0).equals("")) {
+                            status = controller.rentInstrument(cmd.getParameter(0), cmd.getParameter(1));
+                            System.out.println(status);
+                        } else {
+                            System.out.println("Could not understand the command.");
+                        }
                         break;
                     case TERMINATE:
-                        status = controller.terminateRental(cmd.getParameter(0), cmd.getParameter(1));
-                        System.out.println(status);
+                        if (!cmd.getParameter(0).equals("")) {
+                            status = controller.terminateRental(cmd.getParameter(0), cmd.getParameter(1));
+                            System.out.println(status);
+                        } else {
+                            System.out.println("Could not understand the command.");
+                        }
                         break;
                     case ABOUT_ME:
                         printAbout(cmd.getParameter(0));
@@ -77,6 +85,9 @@ public class Interpreter {
         Arrays.stream(Command.values()).forEachOrdered(command -> {
             StringBuilder text = new StringBuilder().append(command.toString().toLowerCase());
             if (command != Command.ILLEGAL_COMMAND) {
+                if (command == Command.LIST) {
+                    text.append(" [INSTRUMENT_TYPE]");
+                }
                 if (command == Command.RENT) {
                     text.append(" [STUDENT_ID] [INSTRUMENT_TYPE]");
                 }
@@ -93,18 +104,22 @@ public class Interpreter {
 
     /**
      * Print out all available instruments.
+     * param contains what instrument type user is searching for.
      *
-     * @param param, if empty then then find all available instruments.
+     * @param param if empty then then find all available instruments.
      * @throws DBException
      */
     private void printAvailableInstruments(String param) throws DBException {
-        if (param.equals("")) {
-            List<? extends InstrumentDTO> instruments = controller.getAvailableInstruments();
-            if (instruments != null) {
-                instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
-                        "\t| Instrument: " + instrument.getType() + "\t\t| Cost: " + instrument.getCost())
-                        .forEach(System.out::println);
-            }
+        List<? extends InstrumentDTO> instruments;
+        if (!param.equals("")) {
+            instruments = controller.getAvailableInstruments(param);
+        } else {
+            instruments = controller.getAvailableInstruments("");
+        }
+        if (instruments != null) {
+            instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
+                    "\t| Instrument: " + instrument.getType() + "\t\t| Cost: " + instrument.getCost())
+                    .forEach(System.out::println);
         } else {
             System.out.println("Could not understand the command.");
         }

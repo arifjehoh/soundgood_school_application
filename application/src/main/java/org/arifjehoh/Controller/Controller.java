@@ -26,12 +26,13 @@ public class Controller {
     /**
      * Find all available instruments.
      *
+     * @param instrument type or all instruments if param is empty.
      * @return list of instruments.
      * @throws DBException
      */
-    public List<? extends InstrumentDTO> getAvailableInstruments() throws DBException {
+    public List<? extends InstrumentDTO> getAvailableInstruments(String instrument) throws DBException {
         try {
-            return instrumentDB.findAvailableInstruments();
+            return instrumentDB.findAvailableInstruments(instrument);
         } catch (Exception exception) {
             throw new DBException("Unable to list available instruments.", exception);
         }

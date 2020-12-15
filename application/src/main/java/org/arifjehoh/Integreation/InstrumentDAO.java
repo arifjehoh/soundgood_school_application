@@ -29,6 +29,7 @@ public class InstrumentDAO {
     private PreparedStatement findInstrumentByRentalIdStmt;
     private PreparedStatement removeInstrumentRent;
     private PreparedStatement findInstrumentsStmt;
+    private PreparedStatement findAvailableInstrumentsByTypeStmt;
 
     public InstrumentDAO() throws DBException {
         try {
@@ -47,6 +48,8 @@ public class InstrumentDAO {
     private void prepareStatements() throws SQLException {
         findAvailableInstrumentsStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
                 " WHERE " + ATTR_RENTAL_ID + " IS NULL");
+        findAvailableInstrumentsByTypeStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
+                " WHERE " + ATTR_INSTRUMENT + " = ? AND " + ATTR_RENTAL_ID + " IS NULL");
         findFirstAvailableInstrumentStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
                 " WHERE " + ATTR_INSTRUMENT + " = ? AND " + ATTR_RENTAL_ID + " IS NULL LIMIT 1");
         findInstrumentsStmt = connection.prepareStatement("SELECT * FROM " + TABLE_NAME +
@@ -64,12 +67,13 @@ public class InstrumentDAO {
     /**
      * Find all available instruments.
      *
+     * @param type of instrument.
      * @return instruments.
      * @throws DBException
      */
-    public List<Instrument> findAvailableInstruments() throws DBException {
+    public List<Instrument> findAvailableInstruments(String type) throws DBException {
         List<Instrument> instruments = new ArrayList<>();
-        try (ResultSet result = findAvailableInstrumentsStmt.executeQuery()) {
+        try (ResultSet result = executeFindAvailableInstrument(type)) {
             while (result.next()) {
                 Instrument instrument = new Instrument
                         .Builder(result.getString(ATTR_INSTRUMENT_ID), result.getString(ATTR_INSTRUMENT)
@@ -84,6 +88,22 @@ public class InstrumentDAO {
         }
 
         return instruments;
+    }
+
+    /**
+     * Execute query for find available instrument.
+     *
+     * @param type of instrument. If param is empty then find all available instrument.
+     * @return query values.
+     * @throws SQLException
+     */
+    private ResultSet executeFindAvailableInstrument(String type) throws SQLException {
+        if (type.equals("")) {
+            return findAvailableInstrumentsStmt.executeQuery();
+        } else {
+            findAvailableInstrumentsByTypeStmt.setString(1, type);
+            return findAvailableInstrumentsByTypeStmt.executeQuery();
+        }
     }
 
     /**

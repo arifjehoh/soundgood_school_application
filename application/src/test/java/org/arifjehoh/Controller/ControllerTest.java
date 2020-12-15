@@ -27,7 +27,7 @@ public class ControllerTest extends TestCase {
     }
 
     public void testAvailableInstruments() throws DBException {
-        assertNotNull(controller.getAvailableInstruments());
+        assertNotNull(controller.getAvailableInstruments(""));
     }
 
     public void testRentInstrument() throws DBException {
