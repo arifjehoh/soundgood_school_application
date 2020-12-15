@@ -10,7 +10,7 @@ services:
             - "8081:8081"
         environment:
             MYSQL_DATABASE: "school"
-            MYSQL_ROOT_PASSWORD: ""
+            MYSQL_ROOT_PASSWORD: "1234"
             MYSQL_USER: "guest"
             MYSQL_PASSWORD: "12341234"
         networks:
