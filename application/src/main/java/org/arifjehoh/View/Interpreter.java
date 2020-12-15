@@ -2,7 +2,6 @@ package org.arifjehoh.View;
 
 import org.arifjehoh.Controller.Controller;
 import org.arifjehoh.Entity.DBException;
-import org.arifjehoh.Entity.Student;
 import org.arifjehoh.Model.InstrumentDTO;
 import org.arifjehoh.Model.RentalDTO;
 import org.arifjehoh.Model.StudentDTO;
@@ -46,7 +45,7 @@ public class Interpreter {
                         System.out.println(status);
                         break;
                     case ABOUT_ME:
-                        printAbout(cmd);
+                        printAbout(cmd.getParameter(0));
                         break;
                     default:
                         System.out.println("illegal command.");
@@ -58,48 +57,12 @@ public class Interpreter {
                 exception.printStackTrace();
             }
         }
-
     }
 
     private void printStudentList() throws DBException {
         List<? extends StudentDTO> students = controller.getStudents();
-        students.stream().map(student -> "Student Id: " + student.getId() +
-                "\t| Full name: " + student.getFullName())
+        students.stream().map(student -> "Student Id: " + student.getId() + "\t| Full name: " + student.getFullName())
                 .forEach(System.out::println);
-    }
-
-    private void printAbout(CommandLine cmd) throws DBException {
-        if (!cmd.getParameter(0).equals("")) {
-            int studentId = Integer.parseInt(cmd.getParameter(0));
-            printRentals(studentId);
-            System.out.println("+++++++++++++++++++++++++++++");
-            printInstruments(studentId);
-        } else {
-            System.out.println("Could not find information from your student id.");
-        }
-    }
-
-    private void printInstruments(int studentId) throws DBException {
-        List<? extends InstrumentDTO> instruments = controller.getInstrumentsBy(studentId);
-        instruments.stream().map(InstrumentDTO::toString).forEach(System.out::println);
-    }
-
-    private void printRentals(int studentId) throws DBException {
-        List<? extends RentalDTO> rentals = controller.getRentalInvoices(studentId);
-        rentals.stream().map(RentalDTO::toString).forEach(System.out::println);
-    }
-
-    private void printAvailableInstruments(String cmd) throws DBException {
-        if (cmd.equals("")) {
-            List<? extends InstrumentDTO> instruments = controller.getAvailableInstruments();
-            if (instruments != null) {
-                instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
-                        "\t| Instrument: " + instrument.getType() +
-                        "\t\t| Cost: " + instrument.getCost()).forEach(System.out::println);
-            }
-        } else {
-            System.out.println("Could not understand the command.");
-        }
     }
 
     private void printCommands() {
@@ -120,24 +83,42 @@ public class Interpreter {
         });
     }
 
+    private void printAvailableInstruments(String cmd) throws DBException {
+        if (cmd.equals("")) {
+            List<? extends InstrumentDTO> instruments = controller.getAvailableInstruments();
+            if (instruments != null) {
+                instruments.stream().map(instrument -> "Instrument ID: " + instrument.getId() +
+                        "\t| Instrument: " + instrument.getType() + "\t\t| Cost: " + instrument.getCost())
+                        .forEach(System.out::println);
+            }
+        } else {
+            System.out.println("Could not understand the command.");
+        }
+    }
+
+    private void printAbout(String id) throws DBException {
+        if (!id.equals("")) {
+            int studentId = Integer.parseInt(id);
+            printRentals(studentId);
+            System.out.println("+++++++++++++++++++++++++++++");
+            printInstruments(studentId);
+        } else {
+            System.out.println("Could not find information from your student id.");
+        }
+    }
+
+    private void printRentals(int studentId) throws DBException {
+        List<? extends RentalDTO> rentals = controller.getRentalInvoices(studentId);
+        rentals.stream().map(RentalDTO::toString).forEach(System.out::println);
+    }
+
+    private void printInstruments(int studentId) throws DBException {
+        List<? extends InstrumentDTO> instruments = controller.getInstrumentsBy(studentId);
+        instruments.stream().map(InstrumentDTO::toString).forEach(System.out::println);
+    }
+
     private String readNextLine() {
         System.out.print(PROMPT);
         return console.nextLine();
-    }
-
-    /**
-     * This is for mocking a student for testing.
-     *
-     * @return A instance of a student object.
-     */
-    private StudentDTO createStudent() {
-        int studentId = 57;
-        int age = 23;
-        String city = "stockholm";
-        String streetName = "danmarkvagen 33";
-        String firstName = "Arif";
-        String lastName = "Jehda-Oh";
-        String ssn = "199410231234";
-        return new Student.Builder(studentId, firstName, lastName, age, city, streetName, ssn).build();
     }
 }
