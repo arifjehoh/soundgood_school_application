@@ -1,8 +1,9 @@
 DROP DATABASE IF EXISTS school;
 CREATE DATABASE IF NOT EXISTS school;
+USE school;
 SET foreign_key_checks = 0;
 
-CREATE TABLE IF NOT EXISTS school.instructor (
+CREATE TABLE IF NOT EXISTS instructor (
  instructor_id INT AUTO_INCREMENT PRIMARY KEY,
  first_name VARCHAR(255) NOT NULL,
  last_name VARCHAR(255) NOT NULL,
@@ -17,7 +18,7 @@ CREATE TABLE IF NOT EXISTS school.instructor (
 );
 
 
-CREATE TABLE IF NOT EXISTS school.instructor_payment (
+CREATE TABLE IF NOT EXISTS instructor_payment (
  instructor_id INT,
  due_date DATE NOT NULL,
  total_income DOUBLE PRECISION(6,2) NOT NULL,
@@ -27,7 +28,7 @@ CREATE TABLE IF NOT EXISTS school.instructor_payment (
 -- type_cost, day_cost, level_cost is a FK to price entity.
 -- Instead of writing a price you write the type of class that will be used as ID.
 -- Price Entity have a ID and Price attribute which will tell how much it is.
-CREATE TABLE IF NOT EXISTS school.lesson (
+CREATE TABLE IF NOT EXISTS lesson (
  lesson_id INT AUTO_INCREMENT PRIMARY KEY,
  start_time TIMESTAMP(0) NOT NULL,
  end_time TIMESTAMP(0) NOT NULL,
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS school.lesson (
 );
 
 
-CREATE TABLE IF NOT EXISTS school.student (
+CREATE TABLE IF NOT EXISTS student (
  student_id INT AUTO_INCREMENT PRIMARY KEY,
  first_name VARCHAR(255) NOT NULL,
  last_name VARCHAR(255) NOT NULL,
@@ -56,7 +57,7 @@ CREATE TABLE IF NOT EXISTS school.student (
 
 
 
-CREATE TABLE IF NOT EXISTS school.tutor_skill (
+CREATE TABLE IF NOT EXISTS tutor_skill (
  instructor_id INT,
  instrument VARCHAR(255) NOT NULL,
  instrument_level NUMERIC(3)
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS school.tutor_skill (
 
 
 
-CREATE TABLE IF NOT EXISTS school.contact_detail (
+CREATE TABLE IF NOT EXISTS contact_detail (
  student_id INT PRIMARY KEY,
  phone_number VARCHAR(10) NOT NULL,
  home_number VARCHAR(10),
@@ -73,14 +74,14 @@ CREATE TABLE IF NOT EXISTS school.contact_detail (
 
 
 
-CREATE TABLE IF NOT EXISTS school.ensemble_skill (
+CREATE TABLE IF NOT EXISTS ensemble_skill (
  instructor_id INT PRIMARY KEY,
  ensemble_genre VARCHAR(255)
 );
 
 
 
-CREATE TABLE IF NOT EXISTS school.invoice (
+CREATE TABLE IF NOT EXISTS invoice (
  student_id INT PRIMARY KEY,
  total_cost VARCHAR(255) NOT NULL,
  due_date DATE NOT NULL,
@@ -90,7 +91,7 @@ CREATE TABLE IF NOT EXISTS school.invoice (
 
 
 
-CREATE TABLE IF NOT EXISTS school.parent (
+CREATE TABLE IF NOT EXISTS parent (
  student_id INT PRIMARY KEY,
  first_name VARCHAR(255),
  last_name VARCHAR(255),
@@ -100,7 +101,7 @@ CREATE TABLE IF NOT EXISTS school.parent (
 
 
 
-CREATE TABLE IF NOT EXISTS school.rental (
+CREATE TABLE IF NOT EXISTS rental (
  rental_id INT AUTO_INCREMENT PRIMARY KEY,
  student_id INT,
  city VARCHAR(255),
@@ -113,7 +114,7 @@ CREATE TABLE IF NOT EXISTS school.rental (
 
 
 
-CREATE TABLE IF NOT EXISTS school.skill (
+CREATE TABLE IF NOT EXISTS skill (
  skill_id INT AUTO_INCREMENT PRIMARY KEY,
  student_id INT,
  instrument VARCHAR(255) NOT NULL,
@@ -125,7 +126,7 @@ CREATE TABLE IF NOT EXISTS school.skill (
 
 
 
-CREATE TABLE IF NOT EXISTS school.application (
+CREATE TABLE IF NOT EXISTS application (
  student_id INT PRIMARY KEY,
  save_application BIT(1) NOT NULL,
  contactable BIT(1) NOT NULL,
@@ -138,7 +139,7 @@ CREATE TABLE IF NOT EXISTS school.application (
 
 
 
-CREATE TABLE IF NOT EXISTS school.instrument_rental (
+CREATE TABLE IF NOT EXISTS instrument_rental (
  instrument_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
  rental_id INT,
  student_id INT,
@@ -148,50 +149,50 @@ CREATE TABLE IF NOT EXISTS school.instrument_rental (
  rental_due_date TIMESTAMP(0)
 );
 
-CREATE TABLE IF NOT EXISTS school.price (
+CREATE TABLE IF NOT EXISTS price (
     price_name VARCHAR(255) NOT NULL PRIMARY KEY,
     price DOUBLE PRECISION(6,2)
 );
 
 
-ALTER TABLE school.instructor_payment ADD CONSTRAINT FK_instructor_payment_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
+ALTER TABLE instructor_payment ADD CONSTRAINT FK_instructor_payment_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
 
 
-ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
-ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_2 FOREIGN KEY (type_cost) REFERENCES price (price_name);
-ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_3 FOREIGN KEY (day_cost) REFERENCES price (price_name);
-ALTER TABLE school.lesson ADD CONSTRAINT FK_lesson_4 FOREIGN KEY (level_cost) REFERENCES price (price_name);
+ALTER TABLE lesson ADD CONSTRAINT FK_lesson_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
+ALTER TABLE lesson ADD CONSTRAINT FK_lesson_2 FOREIGN KEY (type_cost) REFERENCES price (price_name);
+ALTER TABLE lesson ADD CONSTRAINT FK_lesson_3 FOREIGN KEY (day_cost) REFERENCES price (price_name);
+ALTER TABLE lesson ADD CONSTRAINT FK_lesson_4 FOREIGN KEY (level_cost) REFERENCES price (price_name);
 
-ALTER TABLE school.tutor_skill ADD CONSTRAINT FK_tutor_skill_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
-
-
-ALTER TABLE school.contact_detail ADD CONSTRAINT FK_contact_detail_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
+ALTER TABLE tutor_skill ADD CONSTRAINT FK_tutor_skill_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
 
 
-ALTER TABLE school.ensemble_skill ADD CONSTRAINT FK_ensemble_skill_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
+ALTER TABLE contact_detail ADD CONSTRAINT FK_contact_detail_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
 
 
-ALTER TABLE school.invoice ADD CONSTRAINT FK_invoice_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
+ALTER TABLE ensemble_skill ADD CONSTRAINT FK_ensemble_skill_0 FOREIGN KEY (instructor_id) REFERENCES instructor (instructor_id);
 
 
-ALTER TABLE school.parent ADD CONSTRAINT FK_parent_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
+ALTER TABLE invoice ADD CONSTRAINT FK_invoice_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
 
 
-ALTER TABLE school.rental ADD CONSTRAINT FK_rental_0 FOREIGN KEY (student_id) REFERENCES invoice (student_id);
+ALTER TABLE parent ADD CONSTRAINT FK_parent_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
 
 
-ALTER TABLE school.skill ADD CONSTRAINT FK_skill_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
+ALTER TABLE rental ADD CONSTRAINT FK_rental_0 FOREIGN KEY (student_id) REFERENCES invoice (student_id);
 
 
-ALTER TABLE school.application ADD CONSTRAINT FK_application_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
-ALTER TABLE school.application ADD CONSTRAINT FK_application_1 FOREIGN KEY (student_id) REFERENCES invoice (student_id);
-ALTER TABLE school.application ADD CONSTRAINT FK_application_2 FOREIGN KEY (skill_id) REFERENCES skill (skill_id);
-ALTER TABLE school.application ADD CONSTRAINT FK_application_3 FOREIGN KEY (student_id) REFERENCES skill (student_id);
-ALTER TABLE school.application ADD CONSTRAINT FK_application_4 FOREIGN KEY (lesson_id) REFERENCES lesson (lesson_id);
+ALTER TABLE skill ADD CONSTRAINT FK_skill_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
 
 
-ALTER TABLE school.instrument_rental ADD CONSTRAINT FK_instrument_rental_0 FOREIGN KEY (rental_id) REFERENCES rental (rental_id);
-ALTER TABLE school.instrument_rental ADD CONSTRAINT FK_instrument_rental_1 FOREIGN KEY (student_id) REFERENCES rental (student_id);
+ALTER TABLE application ADD CONSTRAINT FK_application_0 FOREIGN KEY (student_id) REFERENCES student (student_id);
+ALTER TABLE application ADD CONSTRAINT FK_application_1 FOREIGN KEY (student_id) REFERENCES invoice (student_id);
+ALTER TABLE application ADD CONSTRAINT FK_application_2 FOREIGN KEY (skill_id) REFERENCES skill (skill_id);
+ALTER TABLE application ADD CONSTRAINT FK_application_3 FOREIGN KEY (student_id) REFERENCES skill (student_id);
+ALTER TABLE application ADD CONSTRAINT FK_application_4 FOREIGN KEY (lesson_id) REFERENCES lesson (lesson_id);
 
 
-ALTER TABLE school.application ADD CONSTRAINT FK_application_6 CHECK (student_id.age >= 16);
+ALTER TABLE instrument_rental ADD CONSTRAINT FK_instrument_rental_0 FOREIGN KEY (rental_id) REFERENCES rental (rental_id);
+ALTER TABLE instrument_rental ADD CONSTRAINT FK_instrument_rental_1 FOREIGN KEY (student_id) REFERENCES rental (student_id);
+
+
+ALTER TABLE application ADD CONSTRAINT FK_application_6 CHECK (student_id.age >= 16);
