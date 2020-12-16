@@ -1,0 +1,13 @@
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (3,'stockholm','12345','Woodlands road','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (2,'stockholm','12345','Windermere Avenue','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (11,'stockholm','12345','Albert Street','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (15,'stockholm','12345','King Edward Road','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (16,'stockholm','12345','Nursery Gardens','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (17,'stockholm','12345','The Paddocks','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (18,'stockholm','12345','Salisbury Road','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (26,'stockholm','12345','Newton Close','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (27,'stockholm','12345','Springfield Avenue','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (28,'stockholm','12345','Cromwell Road','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (29,'stockholm','12345','Osborne Road','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (30,'stockholm','12345','Cecil Street','sweden','2020-12-27 23:59:59');
+INSERT INTO rental(student_id,city,zip_code,street_name,country,rental_due_date) VALUES (31,'stockholm','12345','Barton Road','sweden','2020-12-27 23:59:59');
