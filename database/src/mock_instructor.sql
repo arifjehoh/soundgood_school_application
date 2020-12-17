@@ -1,4 +1,4 @@
-INSERT INTO instructor (first_name,last_name,social_security_number,age,city,zip_code,street_name,phone_number,email) VALUES ('arif','jehda-oh','199707163863',23,'stockholm','12345','bergengatan 3','072123456','arif.jehda-oh@mail.com');
+INSERT INTO instructor (first_name,last_name,social_security_number,age,city,zip_code,street_name,phone_number,email) VALUES ('arif','jehda-oh','199704221345',23,'stockholm','12345','bergengatan 3','072123456','arif.jehda-oh@mail.com');
 INSERT INTO instructor (first_name,last_name,social_security_number,age,city,zip_code,street_name,phone_number,email) VALUES ('mattias','svensson','198009038751',40,'stockholm','12345','Waterside','072123457','mattias.svensson@mail.com');
 INSERT INTO instructor (first_name,last_name,social_security_number,age,city,zip_code,street_name,phone_number,email) VALUES ('maria','qvist','199407129228',26,'stockholm','12345','Ash Lane','072123458','maria.qvist@mail.com');
 INSERT INTO instructor (first_name,last_name,social_security_number,age,city,zip_code,street_name,phone_number,email) VALUES ('johan','lund','197903109469',41,'stockholm','12345','Dale Close','072123459','johan.lund@mail.com');
