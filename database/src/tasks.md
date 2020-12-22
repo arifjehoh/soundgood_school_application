@@ -24,7 +24,7 @@ SELECT DISTINCT instrument, instrument_type, COUNT(instrument) FROM instrument_r
 
 ### Show the average number of instruments rented per month during a specified  year.
 ``` sql
-SELECT ins_rental.month ,AVG(total_number) FROM (SELECT Month(rental_due_date) AS month, COUNT(*) AS total_number FROM instrument_rental WHERE rental_id IS NOT NULL GROUP BY Month(rental_due_date)) AS ins_rental GROUP BY month;
+SELECT ins_rental.month, total_number / 12 AS average FROM (SELECT Month(rental_due_date) AS month, COUNT(*) AS total_number FROM instrument_rental WHERE rental_id IS NOT NULL GROUP BY Month(rental_due_date)) AS ins_rental GROUP BY month;
 ```
 
 ### Show the number of lesson given per month during a specified year.
