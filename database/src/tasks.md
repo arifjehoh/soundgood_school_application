@@ -7,6 +7,9 @@
 ``` sql
 SELECT YEAR(rental_due_date),Month(rental_due_date), COUNT(*) FROM instrument_rental WHERE rental_id IS NOT NULL GROUP BY Year(rental_due_date),Month(rental_due_date);
 ```
+``` sql
+SELECT YEAR(rental_due_date), MONTH(rental_due_date), instrument, COUNT(instrument) FROM instrument_rental WHERE rental_id IS NOT NULL GROUP BY YEAR(rental_due_date), MONTH(rental_due_date), instrument;
+```
 
 ### Show the total number of rented instruments.
 ``` sql
