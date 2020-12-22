@@ -1,0 +1,118 @@
+Student Id: 1	| Full name: Moa Cederblom
+Student Id: 2	| Full name: Eljena Stenbeck
+Student Id: 3	| Full name: Samuel Hammarberg
+Student Id: 4	| Full name: Casper Holmquist
+Student Id: 5	| Full name: Lizette Sparv
+Student Id: 6	| Full name: Ã–nne EdstrÃ¶m
+Student Id: 7	| Full name: Birgit Hagelin
+Student Id: 8	| Full name: Vera Sparre
+Student Id: 9	| Full name: Simone Bruun
+Student Id: 10	| Full name: Oscar Sohlmann
+Student Id: 11	| Full name: Josefina Rehn
+Student Id: 12	| Full name: BÃ¶rje WikstrÃ¶m
+Student Id: 13	| Full name: Emilia Lagerkvist
+Student Id: 14	| Full name: Filip Holmlund
+Student Id: 15	| Full name: Alex Akerman
+Student Id: 16	| Full name: My Tornquist
+Student Id: 17	| Full name: Josefine MalmstrÃ¶m
+Student Id: 18	| Full name: Emma JÃ¶nsson
+Student Id: 19	| Full name: Minna Pettersson
+Student Id: 20	| Full name: Malin Lind
+Student Id: 21	| Full name: Sebastian Ohlin
+Student Id: 22	| Full name: Cecilia Bjorkman
+Student Id: 23	| Full name: GÃ¶sta Anderson
+Student Id: 24	| Full name: Marcus Richardsson
+Student Id: 25	| Full name: Stina Ekman
+Student Id: 26	| Full name: Linus Odenberg
+Student Id: 27	| Full name: Josef Dalin
+Student Id: 28	| Full name: Gabriel Holm
+Student Id: 29	| Full name: Holvaster Hellberg
+Student Id: 30	| Full name: Anne LÃ¶fgren
+Student Id: 31	| Full name: Ottilia LiljestrÃ¶m
+Student Id: 32	| Full name: Mirabella Sandberg
+Student Id: 33	| Full name: Samuel Henriksson
+Student Id: 34	| Full name: Sanna Hammarberg
+Student Id: 35	| Full name: Pia Lundquist
+Student Id: 36	| Full name: Melina Skoglund
+Student Id: 37	| Full name: Anja Ohlson
+Student Id: 38	| Full name: Nichole EkstrÃ¶m
+Student Id: 39	| Full name: Tilde Forslund
+Student Id: 40	| Full name: Yvonne StrÃ¶m
+Student Id: 41	| Full name: Rebecca Magnusson
+Student Id: 42	| Full name: Katja Friberg
+Student Id: 43	| Full name: Adrian Bergquist
+Student Id: 44	| Full name: Jennifer SjÃ¶holm
+Student Id: 45	| Full name: Madelene Nordlund
+Student Id: 46	| Full name: Hildr Blomgren
+Student Id: 47	| Full name: Ã–rjan Larsson
+Student Id: 48	| Full name: Krister NystrÃ¶m
+Student Id: 49	| Full name: Josefine Wahlgren
+Student Id: 50	| Full name: Michael Jonsson
+> help
+quit
+list [INSTRUMENT_TYPE]
+rent [STUDENT_ID] [INSTRUMENT_TYPE]
+terminate [RENTAL_ID] [INSTRUMENT_ID]
+about_me [STUDENT_ID]
+help
+> list guitar
+Instrument ID: 10	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 11	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 12	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 13	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 14	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 15	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 16	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 17	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 18	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 19	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 21	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 22	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 23	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 152	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 153	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 154	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 155	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 156	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 157	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 158	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 159	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 160	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 161	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 162	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 163	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 164	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 165	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 166	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 167	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 168	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 169	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 170	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 171	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 172	| Instrument: guitar		| Cost: 50.0
+Instrument ID: 173	| Instrument: guitar		| Cost: 50.0
+> help
+quit
+list [INSTRUMENT_TYPE]
+rent [STUDENT_ID] [INSTRUMENT_TYPE]
+terminate [RENTAL_ID] [INSTRUMENT_ID]
+about_me [STUDENT_ID]
+help
+> about_me 22
+Rental ID: 26	| Student ID: 22	| Due Date: 2020-12-31 23:59:59		| Total cost: 119.0
++++++++++++++++++++++++++++++
+Instrument ID: 9	| Rental Id: 26	| Instrument: guitar		| Cost: 50.0		| Due Date: 2020-12-31 23:59:59
+> rent 22 piano
+You have successfully rented your instrument.
+> about_me 22
+Rental ID: 26	| Student ID: 22	| Due Date: 2020-12-31 23:59:59		| Total cost: 169.0
++++++++++++++++++++++++++++++
+Instrument ID: 9	| Rental Id: 26	| Instrument: guitar		| Cost: 50.0		| Due Date: 2020-12-31 23:59:59
+Instrument ID: 102	| Rental Id: 26	| Instrument: piano		| Cost: 50.0		| Due Date: 2020-12-31 23:59:59
+> terminate 26 9
+You have successfully terminate your rental of instrument.
+> about_me 22
+Rental ID: 26	| Student ID: 22	| Due Date: 2020-12-31 23:59:59		| Total cost: 169.0
++++++++++++++++++++++++++++++
+Instrument ID: 102	| Rental Id: 26	| Instrument: piano		| Cost: 50.0		| Due Date: 2020-12-31 23:59:59
+> quit
