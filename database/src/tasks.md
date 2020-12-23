@@ -6,19 +6,21 @@
 
 Create a view  
 ``` sql
-CREATE VIEW rented_instruments AS SELECT rental_due_date AS due_date, instrument FROM instrument_rental WHERE rental_id IS NOT NULL;  
+CREATE OR REPLACE VIEW rented_instruments AS SELECT rental_due_date AS due_date, instrument FROM instrument_rental WHERE rental_id IS NOT NULL;  
 SELECT YEAR(due_date), MONTH(due_date), instrument, COUNT(instrument) FROM rented_instruments GROUP BY due_date, instrument;
 ```
 
 ### Show the total number of rented instruments.
 ``` sql
-SELECT COUNT(instrument_id) FROM instrument_rental WHERE rental_id IS NOT NULL;
+CREATE OR REPLACE VIEW rented_instruments AS SELECT rental_due_date AS due_date, instrument, instrument_type AS type FROM instrument_rental WHERE rental_id IS NOT NULL;  
+SELECT COUNT(instrument) FROM rented_instruments;
 ```
 
 ### Show the number of rents per instrument.
 
 ``` sql
-SELECT DISTINCT instrument, instrument_type, COUNT(instrument) FROM instrument_rental WHERE rental_id IS NOT NULL AND rental_due_date LIKE "2020-12%" GROUP BY instrument,instrument_type;
+CREATE OR REPLACE VIEW rented_instruments AS SELECT rental_due_date AS due_date, instrument, instrument_type AS type FROM instrument_rental WHERE rental_id IS NOT NULL;  
+SELECT instrument, type, COUNT(instrument) FROM rented_instruments WHERE due_date LIKE "2020-12%" GROUP BY instrument,type;
 ```
 
 ### Show the average number of instruments rented per month during a specified  year.
